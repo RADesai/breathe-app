@@ -2,6 +2,7 @@ import { useGSAP } from '@gsap/react';
 import type { MetaFunction } from '@remix-run/node';
 import { Link } from '@remix-run/react';
 import gsap from 'gsap/dist/gsap';
+import TextPlugin from 'gsap/dist/TextPlugin';
 
 export const meta: MetaFunction = () => {
   return [
@@ -11,7 +12,7 @@ export const meta: MetaFunction = () => {
 };
 
 if (typeof window !== 'undefined') {
-  gsap.registerPlugin(useGSAP);
+  gsap.registerPlugin([useGSAP, TextPlugin]);
 }
 
 const Breathwork = () => (

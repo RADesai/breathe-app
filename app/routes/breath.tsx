@@ -17,23 +17,13 @@ export interface BreathInstruction {
 }
 export type BreathSequence = BreathInstruction[];
 
-// const styles = {
-//   [INHALE]: `bg-orange-300`,
-//   [RETENTION]: `bg-red-500`,
-//   [EXHALE]: `bg-orange-300 text-blue-300`,
-//   [SUSPENSION]: `bg-red-500 p-0`,
-// };
-
-// const getStyle = (action: Breath) => {
-//   return styles[action];
-// };
 
 export default function Index() {
   const [durations, setDurations] = useState({
-    INHALE: 5,
-    RETENTION: 5,
-    EXHALE: 5,
-    SUSPENSION: 5
+    INHALE: 3,
+    RETENTION: 3,
+    EXHALE: 3,
+    SUSPENSION: 3
   });
   const [action, setAction] = useState<Breath>(INHALE)
 
@@ -41,9 +31,11 @@ export default function Index() {
 
   useGSAP(
     () => {
-      const tl = gsap.timeline({ repeat: -1, smoothChildTiming: true });
+      const breathTl = gsap.timeline({ repeat: -1, smoothChildTiming: true });
+      const wordsTl = gsap.timeline({ repeat: -1 });
+      const carouselTl = gsap.timeline({ repeat: -1 });
 
-      tl.fromTo(
+      breathTl.fromTo(
         '.box',
         {
           height: 1,
@@ -94,6 +86,64 @@ export default function Index() {
             setAction(INHALE);
           },
         });
+
+      wordsTl
+        .to('.words', {
+          duration: durations.INHALE,
+          ease: 'none',
+          text: {
+            value: 'Inhale',
+            padSpace: true,
+            type: 'diff'
+          },
+          onComplete: () => {
+            // setAction(RETENTION);
+          },
+        })
+        .to('.words', {
+          duration: durations.RETENTION,
+          ease: 'none',
+          text: {
+            value: 'Hold - Retention',
+            padSpace: true,
+            type: 'diff'
+          },
+          onComplete: () => {
+            // setAction(EXHALE);
+          },
+        })
+        .to('.words', {
+          duration: durations.EXHALE,
+          ease: 'none',
+          text: {
+            value: 'Exhale',
+            padSpace: true,
+            type: 'diff'
+          },
+          onComplete: () => {
+            // setAction(SUSPENSION);
+          },
+        })
+        .to('.words', {
+          duration: durations.SUSPENSION,
+          ease: 'none',
+          text: {
+            value: 'Hold - Suspension',
+            padSpace: true,
+            type: 'diff'
+          },
+          onComplete: () => {
+            // setAction(INHALE);
+          },
+        });
+
+        carouselTl.fromTo(
+          '.carousel',
+          { x: 200 },
+          { x: -200, duration: durations.INHALE + durations.RETENTION + durations.EXHALE + durations.SUSPENSION, ease: 'power1.inOut' }
+        );
+
+        gsap.timeline().add(breathTl).add(carouselTl, 0).add(wordsTl, 0);
     },
     {
       scope: container,
@@ -114,6 +164,21 @@ export default function Index() {
 
       <div className='my-5 font-bold self-center tracking-widest uppercase'>
         {action}
+      </div>
+
+      <div className='words my-5 font-bold self-center tracking-widest uppercase bg-red-50'>
+        test text
+      </div>
+
+      <div className='w-50 bg-slate-200'>
+        <div className='carousel my-5 font-bold self-center tracking-widest uppercase flex flex-row'>
+          {Object.keys(durations).map((step) => (
+            <div key={step} className='mx-3 bg-indigo-100 px-2'>
+              {step}
+            </div>
+          ))}
+        </div>
+
       </div>
 
       <div className='flex flex-col h-60 bg-slate-200 w-fit self-center'>
