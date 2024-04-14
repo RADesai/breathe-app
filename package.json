@@ -12,7 +12,6 @@
   },
   "dependencies": {
     "@gsap/react": "^2.1.0",
-    "@million/lint": "^0.0.73",
     "@remix-run/express": "^2.8.1",
     "@remix-run/node": "^2.8.1",
     "@remix-run/react": "^2.8.1",
