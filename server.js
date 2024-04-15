@@ -1,5 +1,5 @@
 import { createRequestHandler } from '@remix-run/express';
-import express from 'express';
+import express, { Router } from 'express';
 import serverless from 'serverless-http';
 
 const viteDevServer =
@@ -15,6 +15,9 @@ const app = express();
 app.use(
   viteDevServer ? viteDevServer.middlewares : express.static('build/client')
 );
+
+const router = Router();
+app.use('/api/', router);
 
 const build = viteDevServer
   ? () => viteDevServer.ssrLoadModule('virtual:remix/server-build')
