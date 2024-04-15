@@ -6,9 +6,5 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 installGlobals();
 
 export default defineConfig({
-  base: '/breathe-app/',
-  plugins: [
-    remix({ basename: '/breathe-app/' }),
-    tsconfigPaths(),
-  ],
+  plugins: [ remix(), tsconfigPaths() ]
 });

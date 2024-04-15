@@ -38,15 +38,12 @@ if (typeof window !== 'undefined') {
   gsap.registerPlugin(TextPlugin);
 }
 
-const indicators: (Breath | 'hold')[] = [INHALE, 'hold', EXHALE];
-
-const highlightIndicator = (action: Breath, step: Breath | 'hold') => {
+const highlightIndicator = (action: Breath, step: Breath) => {
   const actionSm = action.toLowerCase();
   const stepSm = step.toLowerCase();
 
   return (
-    actionSm === stepSm ||
-    ((actionSm === RETENTION || actionSm === SUSPENSION) && step === 'hold')
+    actionSm === stepSm
   );
 };
 
@@ -64,138 +61,151 @@ const Error = (props: ErrorProps) => {
 
 export default function Index() {
   const [action, setAction] = useState<Breath>(INHALE);
-  const [durations] = useState({
-    INHALE: 5,
-    RETENTION: 5,
-    EXHALE: 5,
-    SUSPENSION: 5,
+  const [durations, setDurations] = useState({
+    [INHALE]: 3,
+    [RETENTION]: 3,
+    [EXHALE]: 3,
+    [SUSPENSION]: 3,
   });
   const [errors, setErrors] = useState<string[]>([]);
+
+  const [breathCount, setBreathCount] = useState(0)
 
   const container = useRef<HTMLDivElement>(null);
 
   useGSAP(
     () => {
-      const breathTl = gsap.timeline({ repeat: -1, smoothChildTiming: true });
-      const wordsTl = gsap.timeline({ repeat: -1 });
+      const breathTl = gsap.timeline({
+        repeat: -1,
+        smoothChildTiming: true,
+        onRepeat: () => setBreathCount((prevCount) => prevCount + 1)
+      });
 
+      const boxes = gsap.timeline({
+        repeat: -1
+      });
+      // todo: action vs animation timing
       breathTl
         .fromTo(
           '.box',
           {
             height: 5,
             backgroundColor: 'black',
-            ease: 'ease',
+            ease: 'power1.inOut',
             onStart: () => {
               console.log('onStart:INHALE');
               setAction(INHALE);
-            },
+            }
           },
           {
             height: 320,
-            duration: durations.INHALE,
-            ease: 'ease',
-            backgroundColor: 'green',
+            duration: durations[INHALE],
+            ease: 'power1.inOut',
+            backgroundColor: '#87EEAB',
             onComplete: () => {
-              console.log('onComplete:INHALE -> retention');
+              console.log('onComplete:INHALE');
               setAction(RETENTION);
-            },
+            }
           }
         )
         .to('.box', {
           height: 320,
-          duration: durations.RETENTION,
-          backgroundColor: 'green',
-          ease: 'ease',
+          duration: durations[RETENTION],
+          backgroundColor: '#87EEAB',
+          ease: 'power1.inOut',
           onStart: () => {
-            console.log('onStart:HOLD:RETENTION');
+            console.log('onStart:RETENTION');
             setAction(RETENTION);
           },
           onComplete: () => {
-            console.log('onComplete:HOLD:RETENTION -> exhale');
+            console.log('onComplete:RETENTION');
             setAction(EXHALE);
-          },
+          }
         })
         .fromTo(
           '.box',
           {
             height: 320,
-            backgroundColor: 'green',
-            ease: 'ease',
+            backgroundColor: '#87EEAB',
+            ease: 'power1.inOut',
             onStart: () => {
               console.log('onStart:EXHALE');
               setAction(EXHALE);
-            },
+            }
           },
           {
             height: 5,
             backgroundColor: 'black',
-            duration: durations.EXHALE,
-            ease: 'ease',
+            duration: durations[EXHALE],
+            ease: 'power1.inOut',
             onComplete: () => {
-              console.log('onComplete:EXHALE -> suspension');
+              console.log('onComplete:EXHALE');
               setAction(SUSPENSION);
-            },
+            }
           }
         )
         .to('.box', {
           height: 5,
-          duration: durations.SUSPENSION,
-          ease: 'ease',
+          duration: durations[SUSPENSION],
+          ease: 'power1.inOut',
           onStart: () => {
-            console.log('onStart:HOLD:SUSPENSION');
+            console.log('onStart:SUSPENSION');
             setAction(SUSPENSION);
           },
           onComplete: () => {
-            console.log('onComplete:HOLD:SUSPENSION -> inhale');
+            console.log('onComplete:SUSPENSION');
             setAction(INHALE);
-          },
+          }
         });
 
-      wordsTl
+      boxes
         .fromTo(
-          '.words',
+          '.boxes',
           {
-            opacity: 0.25,
-            text: { value: 'Inhale' }
+            opacity: 0,
+            height: 0
           },
           {
-            duration: durations.INHALE,
             opacity: 1,
-            text: { value: 'Inhale', delimiter: ' ' }
+            height: 320,
+            backgroundColor: '#87EEAB',
+            duration: durations[INHALE] + durations[RETENTION] - 2,
+            stagger: {
+              each: 0.1,
+              from: 'center',
+              axis: 'x'
+            },
+            delay: 0
           }
         )
-        .to('.words', {
-          duration: durations.RETENTION,
-          text: { value: 'Hold', delimiter: ' ' }
-        })
         .fromTo(
-          '.words',
+          '.boxes',
           {
-            opacity: 1,
-            text: { value: 'Exhale', },
+            height: 320,
+            opacity: 1
           },
           {
-            duration: durations.EXHALE,
-            opacity: 0.25,
-            text: { value: 'Exhale', delimiter: ' ' }
+            height: 0,
+            opacity: 0,
+            duration: durations[EXHALE] + durations[SUSPENSION] - 2,
+            stagger: {
+              each: 0.1,
+              from: 'center',
+              axis: 'x'
+            },
+            delay: 0
           }
-        )
-        .to('.words', {
-          duration: durations.SUSPENSION,
-          opacity: 0.25,
-          text: { value: 'Hold', delimiter: ' ' }
-        });
+        );
 
-      gsap.timeline().add(breathTl).add(wordsTl, 0);
+      gsap.timeline().add(breathTl).add(boxes, 0);
     },
     {
       scope: container,
       dependencies: [
-        durations.INHALE,
-        durations.RETENTION,
-        durations.EXHALE,
-        durations.SUSPENSION,
+        durations[INHALE],
+        durations[RETENTION],
+        durations[EXHALE],
+        durations[SUSPENSION],
       ],
     }
   );
@@ -206,30 +216,51 @@ export default function Index() {
     const newTime = Number(value);
     if (name === INHALE) {
       console.log('can we update inhale to:', value);
-      if (newTime > durations.EXHALE) {
+      if (newTime > durations[EXHALE]) {
         const msg = 'Inhale cannot be longer than Exhale';
         if (!errors.includes(msg)) {
           setErrors([...errors, msg]);
+        } else {
+          // setDurations((prevState) => {
+          //   return {
+          //     ...prevState,
+          //     [name]: newTime
+          //   }
+          // })
         }
       }
     }
 
     if (name === RETENTION) {
       console.log('can we update retention to:', value);
-      if (newTime > durations.INHALE) {
+      if (newTime > durations[INHALE]) {
         const msg = 'Retention cannot be longer than Inhale';
         if (!errors.includes(msg)) {
           setErrors([...errors, msg]);
+        } else {
+          setDurations((prevState) => {
+            return {
+              ...prevState,
+              [name]: newTime
+            }
+          })
         }
       }
     }
 
     if (name === SUSPENSION) {
       console.log('can we update suspension to:', value);
-      if (newTime > durations.EXHALE) {
+      if (newTime > durations[EXHALE]) {
         const msg = 'Suspension cannot be longer than Exhale';
         if (!errors.includes(msg)) {
           setErrors([...errors, msg]);
+        } else {
+          setDurations((prevState) => {
+            return {
+              ...prevState,
+              [name]: newTime
+            }
+          })
         }
       }
     }
@@ -240,26 +271,31 @@ export default function Index() {
       <Link className='p-2 bg-blue-200 tracking-widest' to='/'>
         Home
       </Link>
-      <div className='w-50 bg-slate-200'>
-        <div className='carousel my-5 font-bold self-center tracking-widest uppercase flex flex-row justify-around'>
-          {indicators.map((step) => (
-            <div
-              key={step}
-              className={`mx-3 bg-green-300 px-2 ${
-                highlightIndicator(action, step) ? 'font-bold underline' : 'opacity-30'
-              }`}
-            >
-              {step}
-            </div>
-          ))}
-        </div>
+      {/* Outlet */}
+
+      <div className='carousel my-5 font-bold self-center tracking-widest uppercase flex flex-row justify-around'>
+        {breaths.map((step) => (
+          <div
+            key={step}
+            className={`mx-3 px-3 py-1 rounded ${
+              highlightIndicator(action, step)
+                ? 'font-bold underline bg-green-300'
+                : 'opacity-75'
+            }`}
+          >
+            {step}: {durations[action]}
+          </div>
+        ))}
       </div>
 
-      <div className='visuals flex flex-col'>
-        <div className='words my-5 font-bold self-center tracking-widest uppercase text-xl text-green-800' />
-        <div className='flex flex-col h-80 w-fit self-center bg-slate-200 rounded'>
-          <div ref={container} className='flex flex-row justify-center'>
-            <div className={`box w-44 rounded`} />
+      <div ref={container} className='flex justify-center'>
+        <div className='visuals flex flex-col'>
+          <div className='flex flex-col self-center bg-slate-200 w-40 h-80'>
+            <div className='flex justify-center'>
+              {Array.from({ length: 20 }, (_, index) => (
+                <div key={index} className={`boxes w-2`} />
+              ))}
+            </div>
           </div>
         </div>
       </div>
@@ -268,12 +304,17 @@ export default function Index() {
         <div className='my-5 font-bold self-center tracking-widest uppercase text-xl text-green-800'>
           Controls
         </div>
-        <div className='flex flex-col gap-2 self-center'>
+        <div className='flex flex-col gap-1 self-center'>
+          {errors && errors.map((error) => <Error key={error} error={error} />)}
+
           {breaths.map((duration) => (
             <Field key={duration} name={duration} updateBreath={updateBreath} />
           ))}
-          {errors && errors.map((error) => <Error key={error} error={error} />)}
         </div>
+      </div>
+
+      <div className='self-center my-5 text-slate-500'>
+        You have been here for {breathCount} breaths
       </div>
     </div>
   );
