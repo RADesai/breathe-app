@@ -5,4 +5,4 @@
   command = "npm run dev"
 
 [context.production]
-  command = "npm run start
+  command = "npm run start"
