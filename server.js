@@ -1,5 +1,6 @@
 import { createRequestHandler } from '@remix-run/express';
 import express from 'express';
+import serverless from 'serverless-http';
 
 const viteDevServer =
   process.env.NODE_ENV === 'production'
@@ -25,3 +26,5 @@ app.all('*', createRequestHandler({ build }));
 app.listen(3000, () => {
   console.log('App listening on http://localhost:3000');
 });
+
+export const handler = serverless(app);
