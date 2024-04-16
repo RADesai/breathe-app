@@ -6,4 +6,4 @@
   NODE_ENV = "production"
 
 [context.production]
-  command = "npm run start"
+  command = "npm run build && npm run start"
