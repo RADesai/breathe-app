@@ -136,31 +136,34 @@ export default function Index() {
 
   return (
     <div className='flex justify-center flex-col'>
-      <Link className='p-2 bg-blue-200 tracking-widest' to='/'>
+      <Link className='p-2 bg-[#94E4FF] tracking-widest' to='/'>
         Home
       </Link>
       {/* Outlet */}
 
-      <div className='text-sm carousel bg-slate-100 mb-5 py-2 font-bold justify-around uppercase flex flex-row w-full'>
-        {breaths.map((step) => (
-          <div
-            key={step}
-            className={`mx-3 px-3 py-1 rounded ${
-              highlightIndicator(action, step)
-                ? 'font-bold underline text-white bg-[#c54c82] underline-offset-4'
-                : 'opacity-40'
-            }`}
-          >
-            {step}: {durations[action]}
-          </div>
-        ))}
-      </div>
+      <div className='flex items-center self-center gap-2 md:gap-10'>
+        <div
+          id='carousel'
+          className='text-sm p-2 font-bold uppercase'
+        >
+          {breaths.map((step) => (
+            <div
+              key={step}
+              className={`rounded my-12 p-2 ${
+                highlightIndicator(action, step)
+                  ? 'underline text-white bg-[#c54c82] underline-offset-4'
+                  : 'opacity-50'
+              }`}
+            >
+              {step}: {durations[action]}
+            </div>
+          ))}
+        </div>
 
-      <div ref={container} className='flex justify-center'>
-        <div className='visuals flex flex-col'>
-          <div className='flex flex-col self-center bg-slate-100 w-40 h-80 border-2 border-[#c54c82] rounded'>
-            <div className='flex justify-center'>
-              {Array.from({ length: 80 }, (_, index) => (
+        <div id='visuals' className=''>
+          <div className='flex flex-col bg-[#c54c82] bg-opacity-20 w-60 h-80 border-2 border-[#c54c82] rounded'>
+            <div ref={container} className='flex justify-center'>
+              {Array.from({ length: 120 }, (_, index) => (
                 <div
                   key={index}
                   className={`boxes w-[2px] first-of-type:rounded-bl last-of-type:rounded-br`}
@@ -171,11 +174,11 @@ export default function Index() {
         </div>
       </div>
 
-      <div className='controls flex flex-col w-2/3 p-8 md:w-1/2 md:p-12 self-center'>
-        <div className='my-5 font-bold self-center tracking-widest uppercase text-xl text-[#c54c82]'>
+      <div className='controls text-[#c54c82] flex flex-col p-8 md:w-2/3 self-center'>
+        <div className='mb-5 font-bold self-center tracking-widest uppercase text-xl'>
           Controls
         </div>
-        <div className='self-center bg-slate-100 rounded p-2'>
+        <div className='self-center bg-slate-100 rounded p-3'>
           <div className='flex flex-col gap-1 self-center mb-5'>
             {breaths.map((breath) => (
               <Field
@@ -187,7 +190,7 @@ export default function Index() {
             ))}
           </div>
 
-          <div className='text-slate-700 text-sm'>
+          <div className='text-sm'>
             This breathwork animation gives you an option to select the length
             of breath that works for you in the moment and try 6-12-16 breaths
             of your choice.

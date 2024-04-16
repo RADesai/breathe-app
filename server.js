@@ -1,7 +1,6 @@
 import { createRequestHandler } from '@remix-run/express';
 import express, { Router } from 'express';
 import serverless from 'serverless-http';
-const bodyParser = require('body-parser');
 
 const viteDevServer =
   process.env.NODE_ENV === 'production'
@@ -19,8 +18,6 @@ app.use(
 
 const router = Router();
 app.use('*', router);
-app.use(bodyParser);
-
 
 const build = viteDevServer
   ? () => viteDevServer.ssrLoadModule('virtual:remix/server-build')

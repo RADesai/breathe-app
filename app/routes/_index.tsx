@@ -23,7 +23,7 @@ const Breathwork = () => (
 export default function Index() {
   return (
     <div className='flex justify-center flex-col'>
-      <Link className='p-2 bg-blue-200 tracking-widest' to='/breath'>
+      <Link className='p-2 bg-[#94E4FF] tracking-widest' to='/breath'>
         Breath
       </Link>
       <div className='m-10 text-2xl'>
