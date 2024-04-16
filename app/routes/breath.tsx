@@ -144,7 +144,7 @@ export default function Index() {
       <div className='flex items-center self-center gap-2 md:gap-10'>
         <div
           id='carousel'
-          className='text-sm p-2 font-bold uppercase'
+          className='text-sm font-bold uppercase'
         >
           {breaths.map((step) => (
             <div
@@ -174,7 +174,7 @@ export default function Index() {
         </div>
       </div>
 
-      <div className='controls text-[#c54c82] flex flex-col p-8 md:w-2/3 self-center'>
+      <div className='controls text-slate-800 flex flex-col px-2 md:w-2/3 self-center'>
         <div className='mb-5 font-bold self-center tracking-widest uppercase text-xl'>
           Controls
         </div>
