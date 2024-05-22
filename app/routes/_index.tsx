@@ -1,9 +1,7 @@
-import { useGSAP } from '@gsap/react';
 import type { MetaFunction } from '@remix-run/node';
 import { Link } from '@remix-run/react';
-import gsap from 'gsap/dist/gsap';
-import TextPlugin from 'gsap/dist/TextPlugin';
 import Info from '~/components/Info';
+import Links from '~/components/Links';
 
 export const meta: MetaFunction = () => {
   return [
@@ -12,9 +10,9 @@ export const meta: MetaFunction = () => {
   ];
 };
 
-if (typeof window !== 'undefined') {
-  gsap.registerPlugin(useGSAP, TextPlugin);
-}
+// if (typeof window !== 'undefined') {
+//   gsap.registerPlugin(useGSAP, TextPlugin);
+// }
 
 const Breathwork = () => (
   <span className='font-bold animate-pulse'>Breathwork</span>
@@ -27,7 +25,11 @@ export default function Index() {
         Breath
       </Link>
       <div className='m-10 text-2xl'>
-        Welcome to <Breathwork />
+        Welcome to <Breathwork /> (app/routes/_index.tsx)
+      </div>
+      <div className='p-2 bg-[#94E4FF]'>
+        <div>Links:</div>
+        <Links />
       </div>
       <div className='p-2'>
         <div>Info:</div>
