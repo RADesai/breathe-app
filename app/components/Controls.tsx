@@ -1,6 +1,6 @@
 import { useNavigate } from '@remix-run/react';
 import { useState } from 'react';
-import { Duration } from '~/routes/breaths';
+import { Duration } from '~/routes/breath';
 import {
     Breath,
     breaths,
@@ -159,11 +159,11 @@ const Controls = (props: ControlsProps) => {
           className='w-full bg-slate-800 text-white rounded p-2 mb-5'
           onClick={() => {
             const path = breathObjectToString(settings);
+            // todo: use redirect() from form action instead of navigate() - https://remix.run/docs/en/main/utils/redirect
             // todo: dont navigate if same settings
-            // ! stop/re-render animation since more are starting
             resetAnimation();
-            console.log(`navigate to: /breaths/${path}`);
-            navigate(`/breaths/${path}`);
+            console.log(`navigate to: /breath/${path}`);
+            navigate(`/breath/${path}`);
           }}
         >
           Update

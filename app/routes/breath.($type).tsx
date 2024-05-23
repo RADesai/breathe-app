@@ -8,10 +8,10 @@ import useGSAP from '~/hooks/useGSAP';
 import { Breath, INHALE } from '~/utils/types';
 import audio_exhale from '../../audio/exhale.m4a';
 import audio_inhale from '../../audio/inhale.wav';
-import { Duration } from './breaths';
+import { Duration } from './breath';
 
 export async function loader({ params }: LoaderFunctionArgs) {
-  console.log('in app/routes/breaths.($type).tsx, params:', params);
+  console.log('in app/routes/breath.($type).tsx, params:', params);
   if (params.type) {
     try {
       console.log('params.type:', params.type);
@@ -82,9 +82,16 @@ const BreathComp = () => {
 
   console.log('breaths:toggleAnimation:', toggleAnimation);
 
+  const buttonStyle =
+    'bg-[#c54c82] text-white rounded p-2 my-4 w-full tracking-widest flex justify-between items-center';
+  const disabledButtonStyle = `${buttonStyle} pointer-events-none opacity-60`;
+
   return (
     <div className='flex flex-wrap justify-around overflow-scroll gap-1 p-2'>
       <div id='carousel' className='text-sm font-bold uppercase'>
+        <div className='mb-5 font-bold text-center tracking-widest uppercase text-xl'>
+          Breath
+        </div>
         <BreathTiles action={action} durations={durations} />
         <audio src={audio_inhale}>
           <track kind='captions' label='inhale' />
@@ -95,6 +102,9 @@ const BreathComp = () => {
       </div>
 
       <div id='visuals' className=''>
+        <div className='mb-5 font-bold text-center tracking-widest uppercase text-xl'>
+          Breath
+        </div>
         <div className='flex flex-col bg-[#c54c82] bg-opacity-20 w-60 h-80 border-2 border-[#c54c82] rounded'>
           <div ref={container} className='flex justify-center'>
             {Array.from({ length: 120 }, (_, index) => (
@@ -105,28 +115,70 @@ const BreathComp = () => {
             ))}
           </div>
         </div>
-        <button
-          className='w-full bg-[#c54c82] text-white rounded p-2 my-5 tracking-widest'
-          onClick={() => {
-            if (isPlaying) {
-              setPlaying(false);
-              console.log(`pause`);
-              toggleAnimation()
-            } else {
-              setPlaying(true);
-              console.log(`play`);
-              toggleAnimation();
-            }
-          }}
-        >
-          {isPlaying ? 'Pause' : 'Play'}
-        </button>
+        <div className='flex justify-center gap-4'>
+          <button
+            {...{
+              className: isPlaying ? buttonStyle : disabledButtonStyle
+            }}
+            onClick={() => {
+              if (isPlaying) {
+                setPlaying(false);
+                toggleAnimation();
+              }
+            }}
+          >
+            <svg
+              aria-hidden='true'
+              className='w-8 h-8 mr-4 opacity-75'
+              xmlns='http://www.w3.org/2000/svg'
+              fill='none'
+              viewBox='0 0 24 24'
+              strokeWidth='1.5'
+              stroke='currentColor'
+            >
+              <path
+                strokeLinecap='round'
+                strokeLinejoin='round'
+                d='M15.75 5.25v13.5m-7.5-13.5v13.5'
+              />
+            </svg>
+            <div>Pause</div>
+          </button>
+          <button
+            {...{
+              className: isPlaying ? disabledButtonStyle : buttonStyle
+            }}
+            onClick={() => {
+              if (!isPlaying) {
+                setPlaying(true);
+                toggleAnimation();
+              }
+            }}
+          >
+            <svg
+              aria-hidden='true'
+              className='w-8 h-8 mr-4 opacity-75'
+              xmlns='http://www.w3.org/2000/svg'
+              fill='none'
+              viewBox='0 0 24 24'
+              strokeWidth='1.5'
+              stroke='currentColor'
+            >
+              <path
+                strokeLinecap='round'
+                strokeLinejoin='round'
+                d='M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z'
+              />
+            </svg>
+            <div>Play</div>
+          </button>
+        </div>
       </div>
 
       <Controls
         resetAnimation={() => {
           console.log('resetting animation:');
-        //   context.revert();
+          setAction(INHALE)
         }}
       />
 

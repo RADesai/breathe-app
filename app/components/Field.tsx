@@ -1,4 +1,4 @@
-import { Breath } from '~/routes/breaths';
+import { Breath } from '~/routes/breath';
 
 const toTitleCase = (str: string) => {
   return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();

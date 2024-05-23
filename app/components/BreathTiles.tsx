@@ -26,7 +26,7 @@ interface BreathsProps {
 
 const BreathTiles = ({ action, durations }: BreathsProps) => {
   return (
-    <div id='carousel' className='text-sm font-bold uppercase flex flex-col justify-between h-80'>
+    <div id='carousel' className='text-sm font-bold uppercase flex flex-col justify-between h-80 px-2'>
       {breaths.map((step) => (
         <div
           key={step}
