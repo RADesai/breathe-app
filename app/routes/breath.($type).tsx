@@ -1,13 +1,11 @@
 import { json, LoaderFunctionArgs } from '@remix-run/node';
-import { useLoaderData } from '@remix-run/react';
+import { useLoaderData, useOutletContext } from '@remix-run/react';
 
 import { useRef, useState } from 'react';
 import BreathTiles from '~/components/BreathTiles';
-import Controls from '~/components/Controls';
 import useGSAP from '~/hooks/useGSAP';
-import { Breath, INHALE } from '~/utils/types';
-import audio_exhale from '../../audio/exhale.m4a';
-import audio_inhale from '../../audio/inhale.wav';
+
+import { Breath } from '~/utils/types';
 import { Duration } from './breath';
 
 export async function loader({ params }: LoaderFunctionArgs) {
@@ -56,15 +54,20 @@ export async function loader({ params }: LoaderFunctionArgs) {
   return null;
 }
 
+interface OutletContext {
+  action: Breath;
+  setBreathCount: React.Dispatch<React.SetStateAction<number>>;
+  setAction: React.Dispatch<React.SetStateAction<Breath>>;
+  // breathCount: number
+}
+
 // todo: form validate with fields, not current
 // todo: set total repetitions / breath count
 const BreathComp = () => {
-  const [action, setAction] = useState<Breath>(INHALE);
-  const [breathCount, setBreathCount] = useState(0);
+  const { action, setAction, setBreathCount } =
+    useOutletContext<OutletContext>();
+
   const [isPlaying, setPlaying] = useState(false);
-  const [playingAudio, setPlaying2] = useState<
-    undefined | '../../audio/exhale.m4a' | '../../audio/inhale.wav'
-  >(undefined);
 
   const container = useRef<HTMLDivElement>(null);
 
@@ -80,8 +83,6 @@ const BreathComp = () => {
     durations
   });
 
-  console.log('breaths:toggleAnimation:', toggleAnimation);
-
   const buttonStyle =
     'bg-[#c54c82] text-white rounded p-2 my-4 w-full tracking-widest flex justify-between items-center';
   const disabledButtonStyle = `${buttonStyle} pointer-events-none opacity-60`;
@@ -93,12 +94,6 @@ const BreathComp = () => {
           Breath
         </div>
         <BreathTiles action={action} durations={durations} />
-        <audio src={audio_inhale}>
-          <track kind='captions' label='inhale' />
-        </audio>
-        <audio src={audio_exhale}>
-          <track kind='captions' label='exhale' />
-        </audio>
       </div>
 
       <div id='visuals' className=''>
@@ -173,17 +168,6 @@ const BreathComp = () => {
             <div>Play</div>
           </button>
         </div>
-      </div>
-
-      <Controls
-        resetAnimation={() => {
-          console.log('resetting animation:');
-          setAction(INHALE)
-        }}
-      />
-
-      <div className='self-center my-5 text-slate-500'>
-        You have been here for {breathCount} breaths
       </div>
     </div>
   );

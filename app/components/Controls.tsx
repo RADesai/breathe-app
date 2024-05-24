@@ -68,10 +68,11 @@ const Error = (props: ErrorProps) => {
 
 interface ControlsProps {
   resetAnimation: () => void;
+  breathCount: number;
 }
 
 const Controls = (props: ControlsProps) => {
-  const { resetAnimation } = props;
+  const { resetAnimation, breathCount } = props;
   const navigate = useNavigate();
   const [settings, setSettings] = useState({
     [INHALE]: 5,
@@ -90,10 +91,18 @@ const Controls = (props: ControlsProps) => {
     event: React.ChangeEvent<HTMLInputElement>,
     breath: Breath
   ) => {
-    console.log('updateBreath:', breath, event);
     const newValue = Number(event.target.value);
 
     if (breath === INHALE && newValue > settings[EXHALE]) {
+      setErrors((prevState) => ({
+        ...prevState,
+        [INHALE]: 'Inhale cannot be longer than Exhale'
+      }));
+    } else if (breath === INHALE && newValue <= settings[EXHALE]) {
+      setErrors((prevState) => ({ ...prevState, [INHALE]: '' }));
+    } else if (breath === EXHALE && newValue > settings[INHALE]) {
+      setErrors((prevState) => ({ ...prevState, [INHALE]: '' }));
+    } else if (breath === EXHALE && newValue <= settings[INHALE]) {
       setErrors((prevState) => ({
         ...prevState,
         [INHALE]: 'Inhale cannot be longer than Exhale'
@@ -105,9 +114,27 @@ const Controls = (props: ControlsProps) => {
         ...prevState,
         [RETENTION]: 'Retention cannot be longer than Inhale'
       }));
+    } else if (breath === RETENTION && newValue <= settings[INHALE]) {
+      setErrors((prevState) => ({ ...prevState, [RETENTION]: '' }));
+    } else if (breath === INHALE && newValue > settings[RETENTION]) {
+      setErrors((prevState) => ({ ...prevState, [RETENTION]: '' }));
+    } else if (breath === INHALE && newValue <= settings[RETENTION]) {
+      setErrors((prevState) => ({
+        ...prevState,
+        [RETENTION]: 'Retention cannot be longer than Inhale'
+      }));
     }
 
     if (breath === SUSPENSION && newValue > settings[EXHALE]) {
+      setErrors((prevState) => ({
+        ...prevState,
+        [SUSPENSION]: 'Suspension cannot be longer than Exhale'
+      }));
+    } else if (breath === SUSPENSION && newValue <= settings[EXHALE]) {
+      setErrors((prevState) => ({ ...prevState, [SUSPENSION]: '' }));
+    } else if (breath === EXHALE && newValue > settings[SUSPENSION]) {
+      setErrors((prevState) => ({ ...prevState, [SUSPENSION]: '' }));
+    } else if (breath === EXHALE && newValue <= settings[SUSPENSION]) {
       setErrors((prevState) => ({
         ...prevState,
         [SUSPENSION]: 'Suspension cannot be longer than Exhale'
@@ -121,7 +148,7 @@ const Controls = (props: ControlsProps) => {
   };
 
   return (
-    <div className='controls text-slate-800 flex flex-col md:w-2/3 self-center'>
+    <div className='controls text-slate-800 flex flex-col md:w-2/3 self-center justify-center'>
       <div className='mb-5 font-bold self-center tracking-widest uppercase text-xl'>
         Controls
       </div>
@@ -170,6 +197,10 @@ const Controls = (props: ControlsProps) => {
         </button>
 
         <ControlsInformation />
+
+        <div className='self-center my-5 text-slate-500'>
+          You have been here for {breathCount} breaths
+        </div>
       </div>
     </div>
   );

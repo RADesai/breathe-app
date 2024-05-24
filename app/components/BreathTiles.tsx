@@ -37,7 +37,7 @@ const BreathTiles = ({ action, durations }: BreathsProps) => {
           }`}
         >
           <div className='underline'>{step}</div>
-          <div className='text-xl'>{durations[step]}</div>
+          <div className='text-xl'>{durations?.[step]}</div>
         </div>
       ))}
     </div>

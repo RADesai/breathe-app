@@ -1,10 +1,24 @@
 import { LinksFunction } from '@remix-run/node';
-import { Links, Meta, Outlet, Scripts, ScrollRestoration } from '@remix-run/react';
+import {
+  Links,
+  Meta,
+  MetaFunction,
+  Outlet,
+  Scripts,
+  ScrollRestoration
+} from '@remix-run/react';
 import stylesheet from '~/tailwind.css?url';
 
 export const links: LinksFunction = () => [
-  { rel: 'stylesheet', href: stylesheet },
+  { rel: 'stylesheet', href: stylesheet }
 ];
+
+export const meta: MetaFunction = () => {
+  return [
+    { title: 'Breathe App' },
+    { name: 'Breathe', content: 'Take a Breath' }
+  ];
+};
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
