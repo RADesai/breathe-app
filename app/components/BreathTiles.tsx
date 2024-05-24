@@ -1,9 +1,4 @@
-import {
-  Action,
-  Breath,
-  breaths,
-  Duration
-} from '~/utils/types';
+import { Action, Breath, breathSteps, Duration } from '~/utils/types';
 
 export const highlightIndicator = (action: Action, step: Breath) => {
   const actionSm = action.toLowerCase();
@@ -14,13 +9,16 @@ export const highlightIndicator = (action: Action, step: Breath) => {
 
 interface BreathsProps {
   action: Action;
-  durations: Duration
+  durations: Duration;
 }
 
 const BreathTiles = ({ action, durations }: BreathsProps) => {
   return (
-    <div id='carousel' className='text-sm font-bold uppercase flex flex-col justify-between h-80 px-2'>
-      {breaths.map((step) => (
+    <div
+      id='carousel'
+      className='text-sm font-bold uppercase flex flex-col justify-between h-80 px-2'
+    >
+      {breathSteps.map((step) => (
         <div
           key={step}
           className={`rounded text-center p-2 ${

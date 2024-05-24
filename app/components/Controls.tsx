@@ -1,4 +1,4 @@
-import { useNavigate } from '@remix-run/react';
+import { useLocation, useNavigate } from '@remix-run/react';
 import { useState } from 'react';
 import {
   Breath,
@@ -36,7 +36,7 @@ function breathObjectToString(settings: Duration) {
 }
 
 const ControlsInformation = () => (
-  <div className='text-sm max-h-64 overflow-scroll px-4 py-20'>
+  <div className='text-sm max-h-72 overflow-scroll px-2 py-20'>
     This breathwork animation gives you an option to select the length of breath
     that works for you in the moment and try 6-12-16 breaths of your choice.
     <br />
@@ -65,7 +65,7 @@ export interface ErrorProps {
 const Error = (props: ErrorProps) => {
   const { error } = props;
 
-  return <div className='text-sm text-red-700 '>{error}</div>;
+  return <div className='text-sm text-red-700'>{error}</div>;
 };
 
 interface ControlsProps {
@@ -76,6 +76,8 @@ interface ControlsProps {
 const Controls = (props: ControlsProps) => {
   const { resetAnimation, breathCount } = props;
   const navigate = useNavigate();
+  const location = useLocation();
+
   const [settings, setSettings] = useState({
     [INHALE]: 5,
     [RETENTION]: 5,
@@ -96,7 +98,7 @@ const Controls = (props: ControlsProps) => {
     errors[RETENTION] ||
     errors[EXHALE] ||
     errors[SUSPENSION] ||
-    Number(errors[CYCLES]) !> 0
+    Number(errors[CYCLES])! > 0;
 
   const updateBreath = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -107,7 +109,7 @@ const Controls = (props: ControlsProps) => {
     if (breath === INHALE && newValue > settings[EXHALE]) {
       setErrors((prevState) => ({
         ...prevState,
-        [INHALE]: 'Inhale cannot be longer than Exhale'
+        [INHALE]: 'Inhale should not be longer than Exhale'
       }));
     } else if (breath === INHALE && newValue <= settings[EXHALE]) {
       setErrors((prevState) => ({ ...prevState, [INHALE]: '' }));
@@ -116,39 +118,39 @@ const Controls = (props: ControlsProps) => {
     } else if (breath === EXHALE && newValue < settings[INHALE]) {
       setErrors((prevState) => ({
         ...prevState,
-        [INHALE]: 'Inhale cannot be longer than Exhale'
+        [INHALE]: 'Inhale should not be longer than Exhale'
       }));
     }
 
     if (breath === RETENTION && newValue > settings[INHALE]) {
       setErrors((prevState) => ({
         ...prevState,
-        [RETENTION]: 'Retention cannot be longer than Inhale'
+        [RETENTION]: 'Retention should not be longer than Inhale'
       }));
     } else if (breath === RETENTION && newValue <= settings[INHALE]) {
       setErrors((prevState) => ({ ...prevState, [RETENTION]: '' }));
-    } else if (breath === INHALE && newValue > settings[RETENTION]) {
+    } else if (breath === INHALE && newValue >= settings[RETENTION]) {
       setErrors((prevState) => ({ ...prevState, [RETENTION]: '' }));
-    } else if (breath === INHALE && newValue <= settings[RETENTION]) {
+    } else if (breath === INHALE && newValue < settings[RETENTION]) {
       setErrors((prevState) => ({
         ...prevState,
-        [RETENTION]: 'Retention cannot be longer than Inhale'
+        [RETENTION]: 'Retention should not be longer than Inhale'
       }));
     }
 
     if (breath === SUSPENSION && newValue > settings[EXHALE]) {
       setErrors((prevState) => ({
         ...prevState,
-        [SUSPENSION]: 'Suspension cannot be longer than Exhale'
+        [SUSPENSION]: 'Suspension should not be longer than Exhale'
       }));
     } else if (breath === SUSPENSION && newValue <= settings[EXHALE]) {
       setErrors((prevState) => ({ ...prevState, [SUSPENSION]: '' }));
-    } else if (breath === EXHALE && newValue > settings[SUSPENSION]) {
+    } else if (breath === EXHALE && newValue >= settings[SUSPENSION]) {
       setErrors((prevState) => ({ ...prevState, [SUSPENSION]: '' }));
-    } else if (breath === EXHALE && newValue <= settings[SUSPENSION]) {
+    } else if (breath === EXHALE && newValue < settings[SUSPENSION]) {
       setErrors((prevState) => ({
         ...prevState,
-        [SUSPENSION]: 'Suspension cannot be longer than Exhale'
+        [SUSPENSION]: 'Suspension should not be longer than Exhale'
       }));
     }
 
@@ -165,7 +167,7 @@ const Controls = (props: ControlsProps) => {
       </div>
 
       <div className='flex rounded'>
-        <div className='flex flex-col gap-4 self-center px-4'>
+        <div className='flex flex-col gap-4 self-center px-4 min-w-60'>
           {breaths.map((breath) => (
             <div key={breath} className='flex flex-col'>
               <div className='flex justify-between items-center pb-1'>
@@ -189,21 +191,32 @@ const Controls = (props: ControlsProps) => {
                   step={1}
                 />
               </div>
-              {errors[breath] && (
+              {/* {errors[breath] && (
                 <Error key={errors[breath]} error={errors[breath]} />
-              )}
+              )} */}
             </div>
           ))}
+          <div className='errors flex flex-col gap-1 text-sm font-semibold'>
+            {Object.entries(errors)
+              .filter(([, value]) => value !== '')
+              .map(([key, error]) => (
+                <Error key={key} error={error} />
+              ))}
+          </div>
           <button
             disabled={!!somethingsWrong}
-            className='rounded p-2 w-full tracking-widest flex items-center justify-center bg-[#94E4FF] mb-5 shadow-lg disabled:opacity-50 disabled:shadow-none'
+            className='rounded p-2 w-full tracking-widest flex items-center justify-center bg-[#94E4FF] mb-5 shadow hover:shadow-[#94E4FF] disabled:opacity-50 disabled:shadow-none'
             onClick={() => {
               const path = breathObjectToString(settings);
               // todo: use redirect() from form action instead of navigate() - https://remix.run/docs/en/main/utils/redirect
               // todo: dont navigate if same settings
               resetAnimation();
               console.log(`navigate to: /breath/${path}`);
-              navigate(`/breath/${path}`);
+              const currentPath = location.pathname;
+              if (currentPath === `/breath/${path}`) {
+                // todo: disable button for this
+                console.log('not gonna redirect to current page');
+              } else navigate(`/breath/${path}`);
             }}
           >
             <svg

@@ -49,16 +49,16 @@ const useGSAP = (props: GsapProps) => {
       .fromTo(
         '.boxes',
         {
-          opacity: 0.5,
+          opacity: 0.75,
           height: 0
         },
         {
           opacity: 1,
           height: 318,
           backgroundColor: '#c54c82',
-          duration: durations[INHALE] - 1.95,
+          duration: durations[INHALE] - 1.2,
           stagger: {
-            each: 0.015,
+            each: 0.005,
             from: 'center',
             axis: 'x'
           },
@@ -73,7 +73,7 @@ const useGSAP = (props: GsapProps) => {
       .to(
         '.boxes',
         {
-          opacity: 0.5,
+          opacity: 0.75,
           duration: durations[RETENTION],
           onStart: () => {
             console.log('onStart:RETENTION');
@@ -87,9 +87,9 @@ const useGSAP = (props: GsapProps) => {
         {
           backgroundColor: '#c54c82',
           height: 0,
-          duration: durations[EXHALE] - 1.95,
+          duration: durations[EXHALE] - 1.2,
           stagger: {
-            each: 0.015,
+            each: 0.005,
             from: 'center',
             axis: 'x'
           },

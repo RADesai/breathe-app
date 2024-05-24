@@ -19,9 +19,11 @@ export type Breath =
   | typeof SUSPENSION
   | typeof CYCLES;
 
-  export type Action = Omit<Breath, typeof CYCLES>
+export type Action = Omit<Breath, typeof CYCLES>;
 
-export const breaths: Breath[] = [INHALE, RETENTION, EXHALE, SUSPENSION];
+export const breathSteps: Breath[] = [INHALE, RETENTION, EXHALE, SUSPENSION];
+export const breaths: Breath[] = [...breathSteps, CYCLES];
+
 export interface BreathInstruction {
   type: Breath;
   duration: number;

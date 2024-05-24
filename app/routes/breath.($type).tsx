@@ -64,7 +64,7 @@ interface OutletContext {
   // breathCount: number
 }
 export const buttonStyle =
-  'bg-[#c54c82] text-white rounded p-2 my-4 w-full tracking-widest flex justify-between items-center shadow-lg disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none';
+  'bg-[#c54c82] text-white rounded p-2 my-4 w-full tracking-widest flex justify-between items-center shadow hover:shadow-[#c54c82] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none';
 // todo: form validate with fields, not current
 // todo: set total repetitions / breath count
 const BreathComp = () => {
@@ -102,10 +102,10 @@ const BreathComp = () => {
         </div>
         <div className='flex flex-col bg-[#c54c82] bg-opacity-5 w-60 h-80 border-2 border-[#c54c82] rounded'>
           <div ref={container} className='flex justify-center'>
-            {Array.from({ length: 120 }, (_, index) => (
+            {Array.from({ length: 240 }, (_, index) => (
               <div
                 key={index}
-                className={`boxes w-[2px] first-of-type:rounded-bl last-of-type:rounded-br`}
+                className={`boxes w-[1px] first-of-type:rounded-bl last-of-type:rounded-br`}
               />
             ))}
           </div>
