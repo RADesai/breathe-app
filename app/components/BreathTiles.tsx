@@ -1,13 +1,11 @@
 import {
+  Action,
   Breath,
   breaths,
-  EXHALE,
-  INHALE,
-  RETENTION,
-  SUSPENSION
+  Duration
 } from '~/utils/types';
 
-export const highlightIndicator = (action: Breath, step: Breath) => {
+export const highlightIndicator = (action: Action, step: Breath) => {
   const actionSm = action.toLowerCase();
   const stepSm = step.toLowerCase();
 
@@ -15,13 +13,8 @@ export const highlightIndicator = (action: Breath, step: Breath) => {
 };
 
 interface BreathsProps {
-  action: Breath;
-  durations: {
-    [INHALE]: number;
-    [RETENTION]: number;
-    [EXHALE]: number;
-    [SUSPENSION]: number;
-  };
+  action: Action;
+  durations: Duration
 }
 
 const BreathTiles = ({ action, durations }: BreathsProps) => {

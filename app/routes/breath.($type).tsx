@@ -1,12 +1,15 @@
 import { json, LoaderFunctionArgs } from '@remix-run/node';
-import { useLoaderData, useOutletContext } from '@remix-run/react';
+import {
+  useLoaderData,
+  useOutletContext,
+  useRouteError
+} from '@remix-run/react';
 
 import { useRef, useState } from 'react';
 import BreathTiles from '~/components/BreathTiles';
 import useGSAP from '~/hooks/useGSAP';
 
-import { Breath } from '~/utils/types';
-import { Duration } from './breath';
+import { Action, Breath, Duration } from '~/utils/types';
 
 export async function loader({ params }: LoaderFunctionArgs) {
   console.log('in app/routes/breath.($type).tsx, params:', params);
@@ -55,7 +58,7 @@ export async function loader({ params }: LoaderFunctionArgs) {
 }
 
 interface OutletContext {
-  action: Breath;
+  action: Action;
   setBreathCount: React.Dispatch<React.SetStateAction<number>>;
   setAction: React.Dispatch<React.SetStateAction<Breath>>;
   // breathCount: number
@@ -86,10 +89,10 @@ const BreathComp = () => {
   });
 
   return (
-    <div className='flex flex-wrap justify-around overflow-scroll gap-1 p-2'>
+    <div className='flex flex-wrap self-center justify-center overflow-scroll gap-1 p-2 md:w-2/3'>
       <div id='carousel' className='text-sm font-bold uppercase'>
         <div className='mb-5 font-bold text-center tracking-widest uppercase text-xl'>
-          Breath
+          Steps
         </div>
         <BreathTiles action={action} durations={durations} />
       </div>
@@ -172,3 +175,16 @@ const BreathComp = () => {
 };
 
 export default BreathComp;
+
+export function ErrorBoundary() {
+  const error = useRouteError();
+  console.error(error)
+  // When NODE_ENV=production:
+  // error.message = "Unexpected Server Error"
+  // error.stack = undefined
+  return (
+    <div className='flex flex-wrap justify-around overflow-scroll gap-1 font-bold bg-red-400 p-2'>
+      Error loading animation, please try again...
+    </div>
+  );
+}

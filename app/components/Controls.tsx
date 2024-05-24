@@ -1,9 +1,10 @@
 import { useNavigate } from '@remix-run/react';
 import { useState } from 'react';
-import { Duration } from '~/routes/breath';
 import {
     Breath,
     breaths,
+    CYCLES,
+    Duration,
     EXHALE,
     INHALE,
     RETENTION,
@@ -15,7 +16,8 @@ function breathObjectToString(settings: Duration) {
     [INHALE]: 'i',
     [RETENTION]: 'r',
     [EXHALE]: 'e',
-    [SUSPENSION]: 's'
+    [SUSPENSION]: 's',
+    [CYCLES]: 'c'
   };
 
   let result = '';
@@ -34,7 +36,7 @@ function breathObjectToString(settings: Duration) {
 }
 
 const ControlsInformation = () => (
-  <div className='text-sm'>
+  <div className='text-sm max-h-64 overflow-scroll px-4 py-20'>
     This breathwork animation gives you an option to select the length of breath
     that works for you in the moment and try 6-12-16 breaths of your choice.
     <br />
@@ -78,14 +80,23 @@ const Controls = (props: ControlsProps) => {
     [INHALE]: 5,
     [RETENTION]: 5,
     [EXHALE]: 5,
-    [SUSPENSION]: 5
+    [SUSPENSION]: 5,
+    [CYCLES]: 10
   });
   const [errors, setErrors] = useState({
     [INHALE]: '',
     [RETENTION]: '',
     [EXHALE]: '',
-    [SUSPENSION]: ''
+    [SUSPENSION]: '',
+    [CYCLES]: ''
   });
+
+  const somethingsWrong =
+    errors[INHALE] ||
+    errors[RETENTION] ||
+    errors[EXHALE] ||
+    errors[SUSPENSION] ||
+    Number(errors[CYCLES]) !> 0
 
   const updateBreath = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -148,12 +159,13 @@ const Controls = (props: ControlsProps) => {
   };
 
   return (
-    <div className='controls text-slate-800 flex flex-col md:w-2/3 self-center justify-center'>
-      <div className='mb-5 font-bold self-center tracking-widest uppercase text-xl'>
+    <div className='controls bg-slate-100 flex flex-col md:w-2/3 self-center justify-center mb-10'>
+      <div className='pt-4 mb-5 font-bold self-center tracking-widest uppercase text-xl'>
         Controls
       </div>
-      <div className='self-center bg-slate-100 rounded p-3'>
-        <div className='flex flex-col gap-1 self-center mb-5'>
+
+      <div className='flex rounded'>
+        <div className='flex flex-col gap-1 self-center mb-5 px-4'>
           {breaths.map((breath) => (
             <div key={breath} className='flex flex-col'>
               <div className='flex justify-between items-center pb-1'>
@@ -181,39 +193,42 @@ const Controls = (props: ControlsProps) => {
               )}
             </div>
           ))}
-        </div>
-        <button
-          className='rounded p-2 my-4 w-full tracking-widest flex items-center justify-center bg-[#94E4FF] mb-5'
-          onClick={() => {
-            const path = breathObjectToString(settings);
-            // todo: use redirect() from form action instead of navigate() - https://remix.run/docs/en/main/utils/redirect
-            // todo: dont navigate if same settings
-            resetAnimation();
-            console.log(`navigate to: /breath/${path}`);
-            navigate(`/breath/${path}`);
-          }}
-        >
-          <svg
-            xmlns='http://www.w3.org/2000/svg'
-            fill='none'
-            viewBox='0 0 24 24'
-            strokeWidth='1.5'
-            stroke='currentColor'
-            className='w-8 h-8 mr-4 opacity-75'
+          <button
+            disabled={somethingsWrong}
+            className='rounded p-2 w-full tracking-widest flex items-center justify-center bg-[#94E4FF] mb-5 disabled:opacity-40'
+            onClick={() => {
+              const path = breathObjectToString(settings);
+              // todo: use redirect() from form action instead of navigate() - https://remix.run/docs/en/main/utils/redirect
+              // todo: dont navigate if same settings
+              resetAnimation();
+              console.log(`navigate to: /breath/${path}`);
+              navigate(`/breath/${path}`);
+            }}
           >
-            <path
-              strokeLinecap='round'
-              strokeLinejoin='round'
-              d='M19.5 12c0-1.232-.046-2.453-.138-3.662a4.006 4.006 0 0 0-3.7-3.7 48.678 48.678 0 0 0-7.324 0 4.006 4.006 0 0 0-3.7 3.7c-.017.22-.032.441-.046.662M19.5 12l3-3m-3 3-3-3m-12 3c0 1.232.046 2.453.138 3.662a4.006 4.006 0 0 0 3.7 3.7 48.656 48.656 0 0 0 7.324 0 4.006 4.006 0 0 0 3.7-3.7c.017-.22.032-.441.046-.662M4.5 12l3 3m-3-3-3 3'
-            />
-          </svg>
-          Update
-        </button>
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              fill='none'
+              viewBox='0 0 24 24'
+              strokeWidth='1.5'
+              stroke='currentColor'
+              className='w-8 h-8 mr-4 opacity-75'
+            >
+              <path
+                strokeLinecap='round'
+                strokeLinejoin='round'
+                d='M19.5 12c0-1.232-.046-2.453-.138-3.662a4.006 4.006 0 0 0-3.7-3.7 48.678 48.678 0 0 0-7.324 0 4.006 4.006 0 0 0-3.7 3.7c-.017.22-.032.441-.046.662M19.5 12l3-3m-3 3-3-3m-12 3c0 1.232.046 2.453.138 3.662a4.006 4.006 0 0 0 3.7 3.7 48.656 48.656 0 0 0 7.324 0 4.006 4.006 0 0 0 3.7-3.7c.017-.22.032-.441.046-.662M4.5 12l3 3m-3-3-3 3'
+              />
+            </svg>
+            Update
+          </button>
+        </div>
 
-        <ControlsInformation />
+        <div className='flex flex-col'>
+          <ControlsInformation />
 
-        <div className='self-center my-5 text-slate-500'>
-          You have been here for {breathCount} breaths
+          <div className='self-center my-5 text-slate-500 p-1'>
+            You have been here for {breathCount} breaths
+          </div>
         </div>
       </div>
     </div>

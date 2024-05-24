@@ -6,13 +6,6 @@ import { Breath as BreathType, INHALE } from '~/utils/types';
 import audio_exhale from '../../audio/exhale.m4a';
 import audio_inhale from '../../audio/inhale.wav';
 
-export interface Duration {
-  inhale: number;
-  retention: number;
-  exhale: number;
-  suspension: number;
-}
-
 const stopAudio = () => {
   const audio1 = new Audio(audio_inhale);
   audio1.pause();
@@ -50,9 +43,14 @@ export default function Index() {
       <audio src={audio_exhale}>
         <track kind='captions' label='exhale' />
       </audio>
-      <Outlet context={{
-        action, setAction, breathCount, setBreathCount
-      }} />
+      <Outlet
+        context={{
+          action,
+          setAction,
+          breathCount,
+          setBreathCount
+        }}
+      />
       <Controls
         breathCount={breathCount}
         resetAnimation={() => {

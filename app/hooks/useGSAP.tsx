@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 
 import gsap from 'gsap/dist/gsap';
 
+import { Duration } from '~/routes/breath';
 import { Breath, EXHALE, INHALE, RETENTION, SUSPENSION } from '~/utils/types';
 import audio_exhale from '../../audio/exhale.m4a';
 import audio_inhale from '../../audio/inhale.wav';
@@ -12,24 +13,14 @@ export interface GsapProps {
   setBreathCount: React.Dispatch<React.SetStateAction<number>>;
   setAction: React.Dispatch<React.SetStateAction<Breath>>;
   scope: React.RefObject<HTMLDivElement>;
-  durations: {
-    inhale: number;
-    retention: number;
-    exhale: number;
-    suspension: number;
-  };
+  durations: Duration
 }
 // todo: shorter audio tracks
 // ? lower volume on complete?
-// todo: play/pause
-/* <Timeline>
-  paused: Boolean
-    If true, the animation will pause itself immediately upon creation.
-  || timeline.pause()
-*/
+
 const playAudio = (src: string) => {
   const audio = new Audio(src);
-  console.log('...PLAY', audio);
+  console.log('...audio would play now:', audio);
   // audio.play();
 };
 
@@ -130,7 +121,7 @@ const useGSAP = (props: GsapProps) => {
         timelineRef.current.kill();
       }
     };
-  }, [durations, setAction, setBreathCount]);
+  }, [durations, setAction, setBreathCount, setPlaying, scope]);
   // Function to toggle animation play/pause (optional based on your needs)
   const toggleAnimation = () => {
     if (timelineRef.current) {
