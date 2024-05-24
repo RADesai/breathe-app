@@ -1,14 +1,14 @@
 import { useLocation, useNavigate } from '@remix-run/react';
 import { useState } from 'react';
 import {
-  Breath,
-  breaths,
-  CYCLES,
-  Duration,
-  EXHALE,
-  INHALE,
-  RETENTION,
-  SUSPENSION
+    Breath,
+    breaths,
+    CYCLES,
+    Duration,
+    EXHALE,
+    INHALE,
+    RETENTION,
+    SUSPENSION
 } from '~/utils/types';
 
 function breathObjectToString(settings: Duration) {
@@ -161,7 +161,7 @@ const Controls = (props: ControlsProps) => {
   };
 
   return (
-    <div className='controls bg-slate-100 flex flex-col md:w-2/3 self-center justify-center mb-10'>
+    <div className='controls bg-[#2d3142] bg-opacity-5 flex flex-col md:w-2/3 self-center justify-center mb-10'>
       <div className='py-2 font-bold self-center tracking-widest uppercase text-xl'>
         Controls
       </div>
@@ -191,9 +191,6 @@ const Controls = (props: ControlsProps) => {
                   step={1}
                 />
               </div>
-              {/* {errors[breath] && (
-                <Error key={errors[breath]} error={errors[breath]} />
-              )} */}
             </div>
           ))}
           <div className='errors flex flex-col gap-1 text-sm font-semibold'>

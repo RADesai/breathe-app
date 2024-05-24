@@ -2,18 +2,28 @@ import React, { useEffect, useRef } from 'react';
 
 import gsap from 'gsap/dist/gsap';
 
-import { Duration } from '~/routes/breath';
-import { Breath, EXHALE, INHALE, RETENTION, SUSPENSION } from '~/utils/types';
+import {
+  Breath,
+  CYCLES,
+  Duration,
+  EXHALE,
+  INHALE,
+  RETENTION,
+  SUSPENSION
+} from '~/utils/types';
 import audio_exhale from '../../audio/exhale.m4a';
 import audio_inhale from '../../audio/inhale.wav';
 
 export interface GsapProps {
   isPlaying: boolean;
   setPlaying: React.Dispatch<React.SetStateAction<boolean>>;
+  completed: boolean;
+  setCompleted: React.Dispatch<React.SetStateAction<boolean>>;
   setBreathCount: React.Dispatch<React.SetStateAction<number>>;
   setAction: React.Dispatch<React.SetStateAction<Breath>>;
   scope: React.RefObject<HTMLDivElement>;
-  durations: Duration
+  onComplete: () => void;
+  durations: Duration;
 }
 // todo: shorter audio tracks
 // ? lower volume on complete?
@@ -31,17 +41,42 @@ const pauseAudio = (src: string) => {
 };
 
 const useGSAP = (props: GsapProps) => {
-  const { setPlaying, setBreathCount, setAction, scope, durations } = props;
-
   const contextRef = useRef(null);
+  const {
+    setPlaying,
+    setBreathCount,
+    setAction,
+    onComplete,
+    completed,
+    setCompleted,
+    scope,
+    durations
+  } = props;
   const timelineRef = useRef(null);
 
   useEffect(() => {
+    console.log('creating timeline for:', durations);
+    // todo: onComplete now that we have cycles
     timelineRef.current = gsap.timeline({
       paused: true,
-      repeat: -1,
+      repeat: durations[CYCLES] - 1 || -1,
       smoothChildTiming: true,
-      onRepeat: () => setBreathCount((prevCount) => prevCount + 1)
+      onRepeat: () => {
+        console.log('repeating!');
+        setBreathCount((prevCount) => {
+          console.log('set breath count', prevCount, '+ 1 -> ', prevCount + 1);
+          return prevCount + 1;
+        });
+      },
+      onComplete: () => {
+        console.log('completed a breath cycle!');
+        setBreathCount((prevCount) => {
+          console.log('add one final to breath count:', prevCount, '+ 1 -> ', prevCount + 1);
+          return prevCount + 1;
+        });
+        setCompleted(true)
+        onComplete();
+      }
     });
     const timeline = timelineRef.current; // Get the created timeline
 
@@ -49,12 +84,12 @@ const useGSAP = (props: GsapProps) => {
       .fromTo(
         '.boxes',
         {
-          opacity: 0.75,
+          opacity: 0,
           height: 0
         },
         {
           opacity: 1,
-          height: 318,
+          height: 315,
           backgroundColor: '#c54c82',
           duration: durations[INHALE] - 1.2,
           stagger: {
@@ -73,7 +108,7 @@ const useGSAP = (props: GsapProps) => {
       .to(
         '.boxes',
         {
-          opacity: 0.75,
+          opacity: 0.5,
           duration: durations[RETENTION],
           onStart: () => {
             console.log('onStart:RETENTION');
@@ -85,7 +120,7 @@ const useGSAP = (props: GsapProps) => {
       .to(
         '.boxes',
         {
-          backgroundColor: '#c54c82',
+          opacity: 1,
           height: 0,
           duration: durations[EXHALE] - 1.2,
           stagger: {
@@ -105,6 +140,7 @@ const useGSAP = (props: GsapProps) => {
         '.boxes',
         {
           duration: durations[SUSPENSION],
+          opacity: 0,
           onStart: () => {
             console.log('onStart:SUSPENSION');
             setAction(SUSPENSION);
@@ -113,20 +149,22 @@ const useGSAP = (props: GsapProps) => {
         durations[INHALE] + durations[RETENTION] + durations[EXHALE]
       );
 
-    // ? return revert to kill on unmount??
     // Cleanup function to kill the timeline on unmount
     return () => {
       if (timelineRef.current) {
-        setPlaying(false)
+        setPlaying(false);
         timelineRef.current.kill();
       }
     };
   }, [durations, setAction, setBreathCount, setPlaying, scope]);
-  // Function to toggle animation play/pause (optional based on your needs)
+  // Function to toggle animation play/pause
   const toggleAnimation = () => {
     if (timelineRef.current) {
       if (timelineRef.current.paused()) {
         timelineRef.current.play();
+      } else if (completed) {
+        timelineRef.current.restart();
+        setCompleted(false)
       } else {
         timelineRef.current.pause();
       }
