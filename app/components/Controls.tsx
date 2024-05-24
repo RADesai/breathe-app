@@ -183,7 +183,7 @@ const Controls = (props: ControlsProps) => {
           ))}
         </div>
         <button
-          className="text-white rounded p-2 my-4 w-full tracking-widest flex items-center justify-center bg-slate-800 mb-5"
+          className='rounded p-2 my-4 w-full tracking-widest flex items-center justify-center bg-[#94E4FF] mb-5'
           onClick={() => {
             const path = breathObjectToString(settings);
             // todo: use redirect() from form action instead of navigate() - https://remix.run/docs/en/main/utils/redirect

@@ -1,7 +1,7 @@
 import { Link } from '@remix-run/react';
 
 const linkClass =
-  'bg-white p-1 rounded h-32 w-32 flex flex-col justify-between text-sm font-bold uppercase justify-around px-2 shadow-[#94E4FF]';
+  'bg-white p-1 rounded h-40 w-40 flex flex-col justify-between text-sm font-bold uppercase justify-around px-2 shadow-[#94E4FF]';
 
 interface Formula {
   name?: string;
