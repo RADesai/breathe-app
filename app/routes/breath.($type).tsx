@@ -60,7 +60,9 @@ interface OutletContext {
   setAction: React.Dispatch<React.SetStateAction<Breath>>;
   // breathCount: number
 }
-
+export const buttonStyle =
+  'bg-[#c54c82] text-white rounded p-2 my-4 w-full tracking-widest flex justify-between items-center';
+const disabledButtonStyle = `${buttonStyle} pointer-events-none opacity-60`;
 // todo: form validate with fields, not current
 // todo: set total repetitions / breath count
 const BreathComp = () => {
@@ -83,10 +85,6 @@ const BreathComp = () => {
     durations
   });
 
-  const buttonStyle =
-    'bg-[#c54c82] text-white rounded p-2 my-4 w-full tracking-widest flex justify-between items-center';
-  const disabledButtonStyle = `${buttonStyle} pointer-events-none opacity-60`;
-
   return (
     <div className='flex flex-wrap justify-around overflow-scroll gap-1 p-2'>
       <div id='carousel' className='text-sm font-bold uppercase'>
@@ -100,7 +98,7 @@ const BreathComp = () => {
         <div className='mb-5 font-bold text-center tracking-widest uppercase text-xl'>
           Breath
         </div>
-        <div className='flex flex-col bg-[#c54c82] bg-opacity-20 w-60 h-80 border-2 border-[#c54c82] rounded'>
+        <div className='flex flex-col bg-[#c54c82] bg-opacity-10 w-60 h-80 border-2 border-[#c54c82] rounded'>
           <div ref={container} className='flex justify-center'>
             {Array.from({ length: 120 }, (_, index) => (
               <div
