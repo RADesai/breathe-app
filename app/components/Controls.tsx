@@ -1,14 +1,14 @@
 import { useNavigate } from '@remix-run/react';
 import { useState } from 'react';
 import {
-    Breath,
-    breaths,
-    CYCLES,
-    Duration,
-    EXHALE,
-    INHALE,
-    RETENTION,
-    SUSPENSION
+  Breath,
+  breaths,
+  CYCLES,
+  Duration,
+  EXHALE,
+  INHALE,
+  RETENTION,
+  SUSPENSION
 } from '~/utils/types';
 
 function breathObjectToString(settings: Duration) {
@@ -111,9 +111,9 @@ const Controls = (props: ControlsProps) => {
       }));
     } else if (breath === INHALE && newValue <= settings[EXHALE]) {
       setErrors((prevState) => ({ ...prevState, [INHALE]: '' }));
-    } else if (breath === EXHALE && newValue > settings[INHALE]) {
+    } else if (breath === EXHALE && newValue >= settings[INHALE]) {
       setErrors((prevState) => ({ ...prevState, [INHALE]: '' }));
-    } else if (breath === EXHALE && newValue <= settings[INHALE]) {
+    } else if (breath === EXHALE && newValue < settings[INHALE]) {
       setErrors((prevState) => ({
         ...prevState,
         [INHALE]: 'Inhale cannot be longer than Exhale'
@@ -160,12 +160,12 @@ const Controls = (props: ControlsProps) => {
 
   return (
     <div className='controls bg-slate-100 flex flex-col md:w-2/3 self-center justify-center mb-10'>
-      <div className='pt-4 mb-5 font-bold self-center tracking-widest uppercase text-xl'>
+      <div className='py-2 font-bold self-center tracking-widest uppercase text-xl'>
         Controls
       </div>
 
       <div className='flex rounded'>
-        <div className='flex flex-col gap-1 self-center mb-5 px-4'>
+        <div className='flex flex-col gap-4 self-center px-4'>
           {breaths.map((breath) => (
             <div key={breath} className='flex flex-col'>
               <div className='flex justify-between items-center pb-1'>
@@ -186,6 +186,7 @@ const Controls = (props: ControlsProps) => {
                   name={breath}
                   type='number'
                   min={1}
+                  step={1}
                 />
               </div>
               {errors[breath] && (
@@ -194,8 +195,8 @@ const Controls = (props: ControlsProps) => {
             </div>
           ))}
           <button
-            disabled={somethingsWrong}
-            className='rounded p-2 w-full tracking-widest flex items-center justify-center bg-[#94E4FF] mb-5 disabled:opacity-40'
+            disabled={!!somethingsWrong}
+            className='rounded p-2 w-full tracking-widest flex items-center justify-center bg-[#94E4FF] mb-5 shadow-lg disabled:opacity-50 disabled:shadow-none'
             onClick={() => {
               const path = breathObjectToString(settings);
               // todo: use redirect() from form action instead of navigate() - https://remix.run/docs/en/main/utils/redirect

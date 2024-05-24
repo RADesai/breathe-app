@@ -64,8 +64,7 @@ interface OutletContext {
   // breathCount: number
 }
 export const buttonStyle =
-  'bg-[#c54c82] text-white rounded p-2 my-4 w-full tracking-widest flex justify-between items-center';
-const disabledButtonStyle = `${buttonStyle} pointer-events-none opacity-60`;
+  'bg-[#c54c82] text-white rounded p-2 my-4 w-full tracking-widest flex justify-between items-center shadow-lg disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none';
 // todo: form validate with fields, not current
 // todo: set total repetitions / breath count
 const BreathComp = () => {
@@ -101,7 +100,7 @@ const BreathComp = () => {
         <div className='mb-5 font-bold text-center tracking-widest uppercase text-xl'>
           Breath
         </div>
-        <div className='flex flex-col bg-[#c54c82] bg-opacity-10 w-60 h-80 border-2 border-[#c54c82] rounded'>
+        <div className='flex flex-col bg-[#c54c82] bg-opacity-5 w-60 h-80 border-2 border-[#c54c82] rounded'>
           <div ref={container} className='flex justify-center'>
             {Array.from({ length: 120 }, (_, index) => (
               <div
@@ -113,9 +112,8 @@ const BreathComp = () => {
         </div>
         <div className='flex justify-center gap-4'>
           <button
-            {...{
-              className: isPlaying ? buttonStyle : disabledButtonStyle
-            }}
+            disabled={!isPlaying}
+            className={buttonStyle}
             onClick={() => {
               if (isPlaying) {
                 setPlaying(false);
@@ -141,9 +139,8 @@ const BreathComp = () => {
             <div>Pause</div>
           </button>
           <button
-            {...{
-              className: isPlaying ? disabledButtonStyle : buttonStyle
-            }}
+            disabled={isPlaying}
+            className={buttonStyle}
             onClick={() => {
               if (!isPlaying) {
                 setPlaying(true);
