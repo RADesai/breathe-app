@@ -88,7 +88,7 @@ const BreathComp = () => {
   });
 
   return (
-    <div className='flex flex-wrap self-center justify-center overflow-scroll gap-1 p-2 md:w-2/3'>
+    <div className='flex flex-wrap self-center justify-center overflow-scroll gap-1 pt-4 px-2 md:w-2/3'>
       <div id='carousel' className='text-sm font-bold uppercase'>
         <div className='mb-5 font-bold text-center tracking-widest uppercase text-xl'>
           Steps
