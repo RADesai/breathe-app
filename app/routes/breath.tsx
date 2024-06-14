@@ -1,6 +1,6 @@
 import { Link, Outlet } from '@remix-run/react';
 
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import Controls from '~/components/Controls';
 import { Breath as BreathType, INHALE } from '~/utils/types';
 import audio_exhale from '../../audio/exhale.m4a';
@@ -13,17 +13,20 @@ const stopAudio = () => {
   audio2.pause();
 };
 
+
+// todo: shorter audio tracks
+// ? lower volume on complete?
+
 export default function Index() {
   // todo: sync audio (? will it resolve insertBefore error ?)
   const [audioInhale, setAudioInhale] = useState<HTMLAudioElement | null>(null);
   const [audioExhale, setAudioExhale] = useState<HTMLAudioElement | null>(null);
   const audioRef = useRef(null);
 
-  useEffect(() => {
-    // Fetch or create audio objects on component mount (replace with your logic)
-    setAudioInhale(new Audio('../../audio/inhale.wav'));
-    setAudioExhale(new Audio('../../audio/exhale.m4a'));
-  }, []);
+  // useEffect(() => {
+  //   setAudioInhale(new Audio('../../audio/inhale.wav'));
+  //   setAudioExhale(new Audio('../../audio/exhale.m4a'));
+  // }, []);
 
   const [action, setAction] = useState<BreathType>(INHALE);
   const [breathCount, setBreathCount] = useState(0);
@@ -37,12 +40,12 @@ export default function Index() {
       >
         Home
       </Link>
-      <audio src={audio_inhale}>
+      {/* <audio src={audio_inhale}>
         <track kind='captions' label='inhale' />
       </audio>
       <audio src={audio_exhale}>
         <track kind='captions' label='exhale' />
-      </audio>
+      </audio> */}
       <Outlet
         context={{
           action,

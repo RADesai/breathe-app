@@ -5,7 +5,8 @@ import {
   useRouteError
 } from '@remix-run/react';
 
-import { useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
+import AudioControl from '~/components/AudioControl';
 import BreathTiles from '~/components/BreathTiles';
 import useGSAP from '~/hooks/useGSAP';
 
@@ -68,7 +69,6 @@ interface OutletContext {
 export const buttonStyle =
   'bg-[#c54c82] text-white rounded p-2 my-4 w-full tracking-widest flex justify-between items-center shadow hover:shadow-[#c54c82] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none';
 // todo: form validate with fields, not current
-// todo: set total repetitions / breath count
 const BreathComp = () => {
   const durations: Duration = useLoaderData();
   const { action, setAction, setBreathCount } =
@@ -78,11 +78,17 @@ const BreathComp = () => {
 
   const container = useRef<HTMLDivElement>(null);
 
-  const onComplete = () => {
+  const onComplete = useCallback(() => {
     console.log('cycles complete');
     setAction(INHALE);
     setPlaying(false);
-  };
+  }, [setAction]);
+
+  const [isAudioPlaying, setIsAudioPlaying] = useState(false);
+  const [currentAudio, setCurrentAudio] = useState<string | null>(null);
+  const [volume, setVolume] = useState(0.1); // Volume range is 0.0 to 1.0
+
+  const audioRef = useRef<HTMLAudioElement>(null);
 
   // todo: extract animation to comp?
   const { toggleAnimation } = useGSAP({
@@ -94,7 +100,12 @@ const BreathComp = () => {
     completed,
     setCompleted,
     scope: container,
-    durations
+    durations,
+    currentAudio,
+    isAudioPlaying,
+    setIsAudioPlaying,
+    setCurrentAudio,
+    audioRef
   });
 
   return (
@@ -104,6 +115,15 @@ const BreathComp = () => {
           Steps
         </div>
         <BreathTiles action={action} durations={durations} />
+        <AudioControl
+          isAudioPlaying={isAudioPlaying}
+          setIsAudioPlaying={setIsAudioPlaying}
+          currentAudio={currentAudio}
+          setCurrentAudio={setCurrentAudio}
+          volume={volume}
+          setVolume={setVolume}
+          audioRef={audioRef}
+        />
       </div>
 
       <div id='visuals' className=''>
@@ -120,16 +140,18 @@ const BreathComp = () => {
             ))}
           </div>
           {completed && (
-            <div className='font-semibold text-[#21a179] pt-15 p-2 w-30 h-40 -z-10'>
+            <div className='font-semibold bg-[#4C9F70] -z-10 w-full h-full text-center pt-5 p-3'>
               <div className='text-balance'>
                 You have completed a breath cycle!
                 <br />
                 <br />
-                We hope you were able to positively impact your physical or mental
-                state with this breathing routine.
+                We hope you were able to positively impact your physical or
+                mental state with this breathing routine.
                 <br />
                 <br />
-                You can repeat this cycle as many times as you like, or you can browse some of the others
+                You can repeat this cycle, or if you like, you can browse some
+                of the others
+                {/* todo: animate in success */}
               </div>
             </div>
           )}
@@ -140,6 +162,9 @@ const BreathComp = () => {
             className={buttonStyle}
             onClick={() => {
               if (isPlaying) {
+                console.log(
+                  '** isplaying already!, setPlaying(false) && toggleAnimation()'
+                );
                 setPlaying(false);
                 toggleAnimation();
               }

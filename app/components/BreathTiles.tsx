@@ -1,4 +1,9 @@
-import { Action, Breath, breathSteps, Duration } from '~/utils/types';
+import {
+  Action,
+  Breath,
+  breathSteps,
+  Duration
+} from '~/utils/types';
 
 export const highlightIndicator = (action: Action, step: Breath) => {
   const actionSm = action.toLowerCase();
