@@ -1,51 +1,22 @@
 import { Link, Outlet } from '@remix-run/react';
 
-import { useRef, useState } from 'react';
-import Controls from '~/components/Controls';
+import { useState } from 'react';
 import { Breath as BreathType, INHALE } from '~/utils/types';
-import audio_exhale from '../../audio/exhale.m4a';
-import audio_inhale from '../../audio/inhale.wav';
 
-const stopAudio = () => {
-  const audio1 = new Audio(audio_inhale);
-  audio1.pause();
-  const audio2 = new Audio(audio_exhale);
-  audio2.pause();
-};
-
-
-// todo: shorter audio tracks
-// ? lower volume on complete?
+import logo from '../logo.png';
 
 export default function Index() {
-  // todo: sync audio (? will it resolve insertBefore error ?)
-  const [audioInhale, setAudioInhale] = useState<HTMLAudioElement | null>(null);
-  const [audioExhale, setAudioExhale] = useState<HTMLAudioElement | null>(null);
-  const audioRef = useRef(null);
-
-  // useEffect(() => {
-  //   setAudioInhale(new Audio('../../audio/inhale.wav'));
-  //   setAudioExhale(new Audio('../../audio/exhale.m4a'));
-  // }, []);
-
   const [action, setAction] = useState<BreathType>(INHALE);
   const [breathCount, setBreathCount] = useState(0);
 
   return (
     <div className='flex justify-center flex-col'>
-      <Link
-        className='p-2 bg-[#94E4FF] tracking-widest'
-        to='/'
-        onClick={() => stopAudio()}
-      >
-        Home
-      </Link>
-      {/* <audio src={audio_inhale}>
-        <track kind='captions' label='inhale' />
-      </audio>
-      <audio src={audio_exhale}>
-        <track kind='captions' label='exhale' />
-      </audio> */}
+      <nav className='p-2 bg-orange flex items-center gap-4 text-2xl'>
+        <Link className='justify-center self-center max-w-20' to='/'>
+          <img src={logo} alt='Divine Studio Logo' />
+        </Link>
+        Divine Studio
+      </nav>
       <Outlet
         context={{
           action,
@@ -54,13 +25,14 @@ export default function Index() {
           setBreathCount
         }}
       />
-      <Controls
+      {/* <Controls
         breathCount={breathCount}
         resetAnimation={() => {
-          // console.log('resetting animation:');
+          console.log('resetting animation:');
+          // todo: pass func to useGSAP to actually reset animation
           setAction(INHALE);
         }}
-      />
+      /> */}
     </div>
   );
 }

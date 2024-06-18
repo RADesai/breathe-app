@@ -1,54 +1,40 @@
+import React, { useState } from 'react';
+import { buttonStyle } from '~/routes/breath.($type)';
 
 interface AudioControlProps {
-  isAudioPlaying: boolean;
-  setIsAudioPlaying: React.Dispatch<React.SetStateAction<boolean>>;
-  currentAudio: string | null;
-  setCurrentAudio: React.Dispatch<React.SetStateAction<string | null>>;
-  volume: number;
-  setVolume: React.Dispatch<React.SetStateAction<number>>;
-  audioRef: React.Ref<HTMLAudioElement>;
+  audioRef: React.MutableRefObject<HTMLAudioElement | null>;
 }
 
 const AudioControl = (props: AudioControlProps) => {
-  const {
-    isAudioPlaying,
-    setIsAudioPlaying,
-    currentAudio,
-    // setCurrentAudio,
-    // volume,
-    // setVolume,
-    audioRef
-  } = props;
+  const { audioRef } = props;
 
-  // const handleVolumeChange = (event) => {
-  //   const newVolume = event.target.value;
-  //   setVolume(newVolume);
-  //   if (audioRef.current) {
-  //     audioRef.current.volume = newVolume;
-  //   }
-  // };
+  const [muted, setMuted] = useState(false);
+
+  const muteAudio = () => {
+    if (audioRef?.current) {
+      audioRef.current.volume = muted ? 1 : 0;
+      setMuted(!muted);
+    }
+  };
 
   return (
     <div>
-      <div>
-        {isAudioPlaying ? (
-          <div className="text-xs">
-            {currentAudio}
-            <svg
-              xmlns='http://www.w3.org/2000/svg'
-              fill='none'
-              viewBox='0 0 24 24'
-              strokeWidth='1.5'
-              stroke='currentColor'
-              className='size-6'
-            >
-              <path
-                strokeLinecap='round'
-                strokeLinejoin='round'
-                d='M19.114 5.636a9 9 0 0 1 0 12.728M16.463 8.288a5.25 5.25 0 0 1 0 7.424M6.75 8.25l4.72-4.72a.75.75 0 0 1 1.28.53v15.88a.75.75 0 0 1-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.009 9.009 0 0 1 2.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75Z'
-              />
-            </svg>
-          </div>
+      <button onClick={muteAudio} className={buttonStyle}>
+        {!muted ? (
+          <svg
+            xmlns='http://www.w3.org/2000/svg'
+            fill='none'
+            viewBox='0 0 24 24'
+            strokeWidth='1.5'
+            stroke='currentColor'
+            className='w-8 h-8'
+          >
+            <path
+              strokeLinecap='round'
+              strokeLinejoin='round'
+              d='M19.114 5.636a9 9 0 0 1 0 12.728M16.463 8.288a5.25 5.25 0 0 1 0 7.424M6.75 8.25l4.72-4.72a.75.75 0 0 1 1.28.53v15.88a.75.75 0 0 1-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.009 9.009 0 0 1 2.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75Z'
+            />
+          </svg>
         ) : (
           <svg
             xmlns='http://www.w3.org/2000/svg'
@@ -56,7 +42,7 @@ const AudioControl = (props: AudioControlProps) => {
             viewBox='0 0 24 24'
             strokeWidth='1.5'
             stroke='currentColor'
-            className='size-6'
+            className='w-8 h-8'
           >
             <path
               strokeLinecap='round'
@@ -65,26 +51,9 @@ const AudioControl = (props: AudioControlProps) => {
             />
           </svg>
         )}
-      </div>
+      </button>
 
-      {/* <div>
-        <label htmlFor='volume'>Volume: </label>
-        <input
-          id='volume'
-          type='range'
-          min='0'
-          max='1'
-          step='0.01'
-          value={volume}
-          onChange={handleVolumeChange}
-        />
-      </div> */}
-
-      <audio
-        ref={audioRef}
-        src={currentAudio ?? undefined}
-        onEnded={() => setIsAudioPlaying(false)}
-      >
+      <audio ref={audioRef} src={'../../audio/breathe.wav'}>
         <track kind='captions' />
       </audio>
     </div>

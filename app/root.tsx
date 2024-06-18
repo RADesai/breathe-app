@@ -10,7 +10,8 @@ import {
 import stylesheet from '~/tailwind.css?url';
 
 export const links: LinksFunction = () => [
-  { rel: 'stylesheet', href: stylesheet }
+  { rel: 'stylesheet', href: stylesheet },
+  { rel: 'icon', href: '/favicon.ico' }
 ];
 
 export const meta: MetaFunction = () => {

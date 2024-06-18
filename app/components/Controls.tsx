@@ -1,14 +1,14 @@
 import { useLocation, useNavigate } from '@remix-run/react';
 import { useState } from 'react';
 import {
-    Breath,
-    breaths,
-    CYCLES,
-    Duration,
-    EXHALE,
-    INHALE,
-    RETENTION,
-    SUSPENSION
+  Breath,
+  breaths,
+  CYCLES,
+  Duration,
+  EXHALE,
+  INHALE,
+  RETENTION,
+  SUSPENSION
 } from '~/utils/types';
 
 function breathObjectToString(settings: Duration) {
@@ -202,12 +202,12 @@ const Controls = (props: ControlsProps) => {
           </div>
           <button
             disabled={!!somethingsWrong}
-            className='rounded p-2 w-full tracking-widest flex items-center justify-center bg-[#94E4FF] mb-5 shadow hover:shadow-[#94E4FF] disabled:opacity-50 disabled:shadow-none'
+            className='rounded p-2 w-full tracking-widest flex items-center justify-center bg-orange mb-5 shadow hover:shadow-orange disabled:opacity-50 disabled:shadow-none'
             onClick={() => {
               const path = breathObjectToString(settings);
               // todo: use redirect() from form action instead of navigate() - https://remix.run/docs/en/main/utils/redirect
               // todo: dont navigate if same settings
-              resetAnimation();
+              resetAnimation(); // TODO: this isn't resetting the animation...
               console.log(`navigate to: /breath/${path}`);
               const currentPath = location.pathname;
               if (currentPath === `/breath/${path}`) {

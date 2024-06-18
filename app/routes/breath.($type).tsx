@@ -67,7 +67,7 @@ interface OutletContext {
   // breathCount: number
 }
 export const buttonStyle =
-  'bg-[#c54c82] text-white rounded p-2 my-4 w-full tracking-widest flex justify-between items-center shadow hover:shadow-[#c54c82] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none';
+  'bg-[#c54c82] text-white rounded p-2 my-4 w-full max-w-36 tracking-widest flex justify-between items-center shadow hover:shadow-[#c54c82] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none';
 // todo: form validate with fields, not current
 const BreathComp = () => {
   const durations: Duration = useLoaderData();
@@ -84,11 +84,7 @@ const BreathComp = () => {
     setPlaying(false);
   }, [setAction]);
 
-  const [isAudioPlaying, setIsAudioPlaying] = useState(false);
-  const [currentAudio, setCurrentAudio] = useState<string | null>(null);
-  const [volume, setVolume] = useState(0.1); // Volume range is 0.0 to 1.0
-
-  const audioRef = useRef<HTMLAudioElement>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   // todo: extract animation to comp?
   const { toggleAnimation } = useGSAP({
@@ -101,10 +97,6 @@ const BreathComp = () => {
     setCompleted,
     scope: container,
     durations,
-    currentAudio,
-    isAudioPlaying,
-    setIsAudioPlaying,
-    setCurrentAudio,
     audioRef
   });
 
@@ -115,15 +107,6 @@ const BreathComp = () => {
           Steps
         </div>
         <BreathTiles action={action} durations={durations} />
-        <AudioControl
-          isAudioPlaying={isAudioPlaying}
-          setIsAudioPlaying={setIsAudioPlaying}
-          currentAudio={currentAudio}
-          setCurrentAudio={setCurrentAudio}
-          volume={volume}
-          setVolume={setVolume}
-          audioRef={audioRef}
-        />
       </div>
 
       <div id='visuals' className=''>
@@ -156,65 +139,67 @@ const BreathComp = () => {
             </div>
           )}
         </div>
-        <div className='flex justify-center gap-4'>
-          <button
-            disabled={!isPlaying}
-            className={buttonStyle}
-            onClick={() => {
-              if (isPlaying) {
-                console.log(
-                  '** isplaying already!, setPlaying(false) && toggleAnimation()'
-                );
-                setPlaying(false);
-                toggleAnimation();
-              }
-            }}
+      </div>
+
+      <div className='flex justify-center gap-4 basis-full'>
+        <AudioControl audioRef={audioRef} />
+        <button
+          disabled={!isPlaying}
+          className={buttonStyle}
+          onClick={() => {
+            if (isPlaying) {
+              console.log(
+                '** isplaying already!, setPlaying(false) && toggleAnimation()'
+              );
+              setPlaying(false);
+              toggleAnimation();
+            }
+          }}
+        >
+          <svg
+            aria-hidden='true'
+            className='w-8 h-8 mr-4'
+            xmlns='http://www.w3.org/2000/svg'
+            fill='none'
+            viewBox='0 0 24 24'
+            strokeWidth='1.5'
+            stroke='currentColor'
           >
-            <svg
-              aria-hidden='true'
-              className='w-8 h-8 mr-4 opacity-75'
-              xmlns='http://www.w3.org/2000/svg'
-              fill='none'
-              viewBox='0 0 24 24'
-              strokeWidth='1.5'
-              stroke='currentColor'
-            >
-              <path
-                strokeLinecap='round'
-                strokeLinejoin='round'
-                d='M15.75 5.25v13.5m-7.5-13.5v13.5'
-              />
-            </svg>
-            <div>Pause</div>
-          </button>
-          <button
-            disabled={isPlaying}
-            className={buttonStyle}
-            onClick={() => {
-              if (!isPlaying) {
-                setPlaying(true);
-                toggleAnimation();
-              }
-            }}
+            <path
+              strokeLinecap='round'
+              strokeLinejoin='round'
+              d='M15.75 5.25v13.5m-7.5-13.5v13.5'
+            />
+          </svg>
+          <div>Pause</div>
+        </button>
+        <button
+          disabled={isPlaying}
+          className={buttonStyle}
+          onClick={() => {
+            if (!isPlaying) {
+              setPlaying(true);
+              toggleAnimation();
+            }
+          }}
+        >
+          <svg
+            aria-hidden='true'
+            className='w-8 h-8 mr-4'
+            xmlns='http://www.w3.org/2000/svg'
+            fill='none'
+            viewBox='0 0 24 24'
+            strokeWidth='1.5'
+            stroke='currentColor'
           >
-            <svg
-              aria-hidden='true'
-              className='w-8 h-8 mr-4 opacity-75'
-              xmlns='http://www.w3.org/2000/svg'
-              fill='none'
-              viewBox='0 0 24 24'
-              strokeWidth='1.5'
-              stroke='currentColor'
-            >
-              <path
-                strokeLinecap='round'
-                strokeLinejoin='round'
-                d='M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z'
-              />
-            </svg>
-            <div>Play</div>
-          </button>
-        </div>
+            <path
+              strokeLinecap='round'
+              strokeLinejoin='round'
+              d='M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z'
+            />
+          </svg>
+          <div>Play</div>
+        </button>
       </div>
       {/* <Firework>
         Content??

@@ -11,8 +11,6 @@ import {
   RETENTION,
   SUSPENSION
 } from '~/utils/types';
-import audio_exhale from '../../audio/exhale.m4a';
-import audio_inhale from '../../audio/inhale.wav';
 
 export interface GsapProps {
   isPlaying: boolean;
@@ -20,21 +18,18 @@ export interface GsapProps {
   completed: boolean;
   setCompleted: React.Dispatch<React.SetStateAction<boolean>>;
   setBreathCount: React.Dispatch<React.SetStateAction<number>>;
-  setCurrentAudio: React.Dispatch<React.SetStateAction<string | null>>;
-  isAudioPlaying: boolean;
-  setIsAudioPlaying: React.Dispatch<React.SetStateAction<boolean>>;
-  audioRef: React.Ref<HTMLAudioElement>;
+  audioRef: React.MutableRefObject<HTMLAudioElement | null>;
   setAction: React.Dispatch<React.SetStateAction<Breath>>;
   scope: React.RefObject<HTMLDivElement>;
   onComplete: () => void;
   durations: Duration;
 }
 
-const playAudio = (src: string) => {
-  const audio = new Audio(src);
-  console.log('...audio would play now:', audio);
-  audio.volume = 0.1;
-  audio.play();
+const playAudio = (audioRef: React.MutableRefObject<HTMLAudioElement | null>) => {
+  if (audioRef.current) {
+    audioRef.current.currentTime = 0; // Restart the audio
+    audioRef.current.play();
+  }
 };
 
 const useGSAP = (props: GsapProps) => {
@@ -46,37 +41,19 @@ const useGSAP = (props: GsapProps) => {
     onComplete,
     completed,
     setCompleted,
-    isAudioPlaying,
-    setIsAudioPlaying,
-    setCurrentAudio,
     audioRef,
     scope,
     durations
   } = props;
   const timelineRef = useRef(null);
 
-  const handleSelectAudio = useCallback(
-    (src: string) => {
-      console.log(`* handle-SelectAudio() -> setCurrentAudio(${src})`);
-      // todo: diagram state updates onStart and onExhale and verify if we can manage both audios like this, some infinite loop is happening when switching from inhale to exhale audio...
-      if (isAudioPlaying) {
-        console.log('* some audio is currently playing -> pause()');
-        audioRef?.current?.pause();
-        // setIsAudioPlaying(!isAudioPlaying); // ! why doesnt this work?
-      } else {
-        console.log('* some audio is NOT currently playing');
-        setIsAudioPlaying(!isAudioPlaying);
-        setCurrentAudio(src);
-      }
-      console.log(
-        '* regardless of audio is currently playing, set new audio:',
-        src
-      );
-      setCurrentAudio(src);
+  const handleAudioSwitch = useCallback(
+    () => {
+      console.log(`* handle-AudioSwitch()`);
+      playAudio(audioRef);
     },
-    [audioRef, isAudioPlaying, setCurrentAudio, setIsAudioPlaying]
+    [audioRef]
   );
-
 
   useEffect(() => {
     // console.log('useGSAP useEffect');
@@ -102,7 +79,7 @@ const useGSAP = (props: GsapProps) => {
         }
       });
     } else {
-      console.log('Clear the existing timeline without killing it');
+      // console.log('Clear the existing timeline without killing it');
       // Clear the existing timeline without killing it
       timelineRef.current.clear();
     }
@@ -125,9 +102,9 @@ const useGSAP = (props: GsapProps) => {
             axis: 'x'
           },
           onStart: () => {
-            console.log('setAction to INHALE and select audio: BREATHE');
+            console.log('INHALE');
             setAction(INHALE);
-            handleSelectAudio(audio_inhale);
+            handleAudioSwitch()
           }
         },
         0
@@ -138,9 +115,9 @@ const useGSAP = (props: GsapProps) => {
           opacity: 0.5,
           duration: durations[RETENTION],
           onStart: () => {
-            console.log('setAction to RETENTION and select audio: HOLD');
+            console.log('RETENTION');
             setAction(RETENTION);
-            // halfAudioVolume(audio_inhale);
+            handleAudioSwitch()
           }
         },
         durations[INHALE]
@@ -157,9 +134,9 @@ const useGSAP = (props: GsapProps) => {
             axis: 'x'
           },
           onStart: () => {
-            console.log('setAction to EXHALE and select audio: BREATHE');
+            console.log('EXHALE');
             setAction(EXHALE);
-            handleSelectAudio(audio_exhale);
+            handleAudioSwitch()
           }
         },
         durations[INHALE] + durations[RETENTION]
@@ -170,9 +147,9 @@ const useGSAP = (props: GsapProps) => {
           duration: durations[SUSPENSION],
           opacity: 0,
           onStart: () => {
-            console.log('setAction to SUSPENSION and select audio: HOLD');
+            console.log('SUSPENSION');
             setAction(SUSPENSION);
-            // halfAudioVolume(audio_exhale);
+            handleAudioSwitch()
           }
         },
         durations[INHALE] + durations[RETENTION] + durations[EXHALE]
@@ -180,28 +157,19 @@ const useGSAP = (props: GsapProps) => {
 
     return () => {
       // Cleanup function to kill the timeline on unmount
-      console.log('gsap cleanup');
+      // console.log('gsap cleanup');
       if (timelineRef.current) {
-        console.log('setPlaying(false) && kill');
+        // console.log('setPlaying(false) && kill');
         // timelineRef.current?.clear();
         // timelineRef.current?.kill();
         // timelineRef.current = null;
         // setPlaying(false);
       } else {
-        console.log('gsap cleanup, no timeline to be found');
+        // console.log('gsap cleanup, no timeline to be found');
       }
     };
     // ! todo: somethings breaking in these deps
-  }, [
-    durations,
-    setAction,
-    setBreathCount,
-    setPlaying,
-    scope,
-    handleSelectAudio,
-    setCompleted,
-    onComplete
-  ]);
+  }, [durations, setAction, setBreathCount, setPlaying, scope, setCompleted, onComplete, handleAudioSwitch]);
 
   // Function to toggle animation play/pause
   const toggleAnimation = useCallback(() => {
