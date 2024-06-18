@@ -12,7 +12,6 @@ const AudioControl = (props: AudioControlProps) => {
 
   const muteAudio = () => {
     if (audioRef?.current) {
-      audioRef.current.volume = muted ? 1 : 0;
       setMuted(!muted);
     }
   };
@@ -53,7 +52,7 @@ const AudioControl = (props: AudioControlProps) => {
         )}
       </button>
 
-      <audio ref={audioRef}>
+      <audio ref={audioRef} muted={muted}>
         <source src='/audio/breathe.wav' type="audio/wav"></source>
         <track kind='captions' />
       </audio>
