@@ -53,7 +53,8 @@ const AudioControl = (props: AudioControlProps) => {
         )}
       </button>
 
-      <audio ref={audioRef} src={'../../audio/breathe.wav'}>
+      <audio ref={audioRef}>
+        <source src='/audio/breathe.wav' type="audio/wav"></source>
         <track kind='captions' />
       </audio>
     </div>
