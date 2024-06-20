@@ -161,7 +161,7 @@ const Controls = (props: ControlsProps) => {
   };
 
   return (
-    <div className='controls bg-[#2d3142] bg-opacity-5 flex flex-col md:w-2/3 self-center justify-center mb-10'>
+    <div className='controls bg-dark bg-opacity-5 flex flex-col md:w-2/3 self-center justify-center mb-10'>
       <div className='py-2 font-bold self-center tracking-widest uppercase text-xl'>
         Controls
       </div>

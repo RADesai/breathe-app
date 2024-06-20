@@ -25,7 +25,9 @@ export interface GsapProps {
   durations: Duration;
 }
 
-const playAudio = (audioRef: React.MutableRefObject<HTMLAudioElement | null>) => {
+const playAudio = (
+  audioRef: React.MutableRefObject<HTMLAudioElement | null>
+) => {
   if (audioRef.current) {
     audioRef.current.currentTime = 0; // Restart the audio
     audioRef.current.play();
@@ -33,7 +35,8 @@ const playAudio = (audioRef: React.MutableRefObject<HTMLAudioElement | null>) =>
 };
 
 const useGSAP = (props: GsapProps) => {
-  const contextRef = useRef(null);
+  const [seconds, setSeconds] = React.useState(0);
+
   const {
     setPlaying,
     setBreathCount,
@@ -47,13 +50,7 @@ const useGSAP = (props: GsapProps) => {
   } = props;
   const timelineRef = useRef(null);
 
-  const handleAudioSwitch = useCallback(
-    () => {
-      console.log(`* handle-AudioSwitch()`);
-      playAudio(audioRef);
-    },
-    [audioRef]
-  );
+  const handleAudioSwitch = useCallback(() => playAudio(audioRef), [audioRef]);
 
   useEffect(() => {
     // console.log('useGSAP useEffect');
@@ -64,23 +61,27 @@ const useGSAP = (props: GsapProps) => {
         paused: true,
         repeat: durations[CYCLES] - 1 || -1,
         smoothChildTiming: true,
+        onStart: () => {
+          console.log('TIMELINE:onStart');
+        },
+        onUpdate: () => {
+          const time = timelineRef?.current?.time();
+          setSeconds(Math.round(time));
+        },
         onRepeat: () => {
           console.log('TIMELINE:onRepeat');
           setBreathCount((prevCount) => prevCount + 1);
         },
-        onStart: () => {
-          console.log('TIMELINE:onStart');
-        },
         onComplete: () => {
           console.log('TIMELINE:onComplete');
           setBreathCount((prevCount) => prevCount + 1);
+          setSeconds(0);
           setCompleted(true);
           onComplete();
         }
       });
     } else {
       // console.log('Clear the existing timeline without killing it');
-      // Clear the existing timeline without killing it
       timelineRef.current.clear();
     }
 
@@ -94,7 +95,7 @@ const useGSAP = (props: GsapProps) => {
         {
           opacity: 1,
           height: 315,
-          backgroundColor: '#c54c82',
+          backgroundColor: '#E56399',
           duration: durations[INHALE] - 1.2,
           stagger: {
             each: 0.005,
@@ -104,7 +105,7 @@ const useGSAP = (props: GsapProps) => {
           onStart: () => {
             console.log('INHALE');
             setAction(INHALE);
-            handleAudioSwitch()
+            handleAudioSwitch();
           }
         },
         0
@@ -117,7 +118,7 @@ const useGSAP = (props: GsapProps) => {
           onStart: () => {
             console.log('RETENTION');
             setAction(RETENTION);
-            handleAudioSwitch()
+            handleAudioSwitch();
           }
         },
         durations[INHALE]
@@ -136,7 +137,7 @@ const useGSAP = (props: GsapProps) => {
           onStart: () => {
             console.log('EXHALE');
             setAction(EXHALE);
-            handleAudioSwitch()
+            handleAudioSwitch();
           }
         },
         durations[INHALE] + durations[RETENTION]
@@ -149,49 +150,60 @@ const useGSAP = (props: GsapProps) => {
           onStart: () => {
             console.log('SUSPENSION');
             setAction(SUSPENSION);
-            handleAudioSwitch()
+            handleAudioSwitch();
           }
         },
         durations[INHALE] + durations[RETENTION] + durations[EXHALE]
       );
 
     return () => {
-      // Cleanup function to kill the timeline on unmount
+      // TODO: Cleanup function to kill the timeline on unmount, its still playing on route changes
       // console.log('gsap cleanup');
       if (timelineRef.current) {
         // console.log('setPlaying(false) && kill');
-        // timelineRef.current?.clear();
-        // timelineRef.current?.kill();
-        // timelineRef.current = null;
-        // setPlaying(false);
       } else {
         // console.log('gsap cleanup, no timeline to be found');
       }
     };
     // ! todo: somethings breaking in these deps
-  }, [durations, setAction, setBreathCount, setPlaying, scope, setCompleted, onComplete, handleAudioSwitch]);
+  }, [
+    durations,
+    setAction,
+    setBreathCount,
+    setPlaying,
+    scope,
+    setCompleted,
+    onComplete,
+    handleAudioSwitch
+  ]);
 
-  // Function to toggle animation play/pause
+  const restartAnimation = () => {
+    if (timelineRef.current) {
+      // reset timeline
+      timelineRef.current.seek(0);
+      timelineRef.current.pause();
+      // reset state
+      setPlaying(false);
+      setCompleted(false);
+      setSeconds(0);
+      setAction(INHALE);
+    }
+  };
+
   const toggleAnimation = useCallback(() => {
-    console.log('toggle-animation()');
     if (timelineRef.current) {
       if (timelineRef.current.paused()) {
-        console.log('** timeline paused -> play()');
         timelineRef.current.play();
       } else if (completed) {
-        console.log(
-          '** timeline completed -> restart() && setCompleted(false)'
-        );
         timelineRef.current.restart();
         setCompleted(false);
       } else {
-        console.log('** -> pause()');
         timelineRef.current.pause();
       }
     }
   }, [completed, setCompleted]);
 
-  return { toggleAnimation };
+  return { toggleAnimation, seconds, restartAnimation };
 };
 
 export default useGSAP;

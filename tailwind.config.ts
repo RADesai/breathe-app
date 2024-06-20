@@ -5,10 +5,11 @@ export default {
   theme: {
     extend: {
       colors: {
-        'purple': '#412677',
-        'orange': '#ffb24c',
+        purple: '#E56399',
+        orange: '#ffb24c',
+        dark: '#2d3142'
       }
-    },
+    }
   },
-  plugins: [],
+  plugins: []
 } satisfies Config;
