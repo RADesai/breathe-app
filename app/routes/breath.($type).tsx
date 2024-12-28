@@ -1,11 +1,5 @@
-import { json, LoaderFunctionArgs } from '@remix-run/node';
-import {
-  useLoaderData,
-  useOutletContext,
-  useRouteError
-} from '@remix-run/react';
-
 import { useCallback, useRef, useState } from 'react';
+import { LoaderFunctionArgs, useLoaderData, useOutletContext, useRouteError } from 'react-router';
 import AudioControl from '~/components/AudioControl';
 import BreathTiles from '~/components/BreathTiles';
 import useGSAP from '~/hooks/useGSAP';
@@ -14,6 +8,7 @@ import { Action, Breath, Duration, INHALE } from '~/utils/types';
 
 export async function loader({ params }: LoaderFunctionArgs) {
   if (params.type) {
+    // TODO: use js map for list of changing breath timings
     try {
       const type = params.type; // Get the type from the URL params
 
@@ -43,7 +38,7 @@ export async function loader({ params }: LoaderFunctionArgs) {
           exhale: parseInt(e),
           cycles: parseInt(c) || 0
         };
-        return json(parsedObject);
+        return Response.json(parsedObject);
       } else {
         console.error(`Unable to match route: ${type}`);
       }

@@ -1,4 +1,4 @@
-import { Link } from '@remix-run/react';
+import { Link } from 'react-router';
 
 const linkClass =
   'bg-white p-1 rounded h-44 w-44 flex flex-col justify-between text-sm font-bold justify-around px-2 shadow-orange';
