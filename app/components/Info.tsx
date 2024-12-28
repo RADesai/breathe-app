@@ -1,20 +1,20 @@
 const Info = () => {
-    return (
+  return (
+    <div className='p-2'>
+      <div>Info:</div>
+
       <div className='text-pretty'>
         Guided Diaphragmatic Breathing
         <br />
         <br />
-
         From ancient times the breath has been recognised as the key to our
         life.
         <br />
         <br />
-
-        Proper breathwork helps balance & clarify one&apos;s emotions that supports
-        the individuals to unfold their highest potential.
+        Proper breathwork helps balance & clarify one&apos;s emotions that
+        supports the individuals to unfold their highest potential.
         <br />
         <br />
-
         Like all movement in the body the mechanics of the breathing are related
         to muscular contraction; and inhalation is specifically initiated as a
         result of the intercostal muscles (the muscles between the ribs) and the
@@ -30,7 +30,6 @@ const Info = () => {
         extension of the spine.
         <br />
         <br />
-
         Conscious use of Inhale in Asana practice should enhance this natural
         process and all of the following movements when linked with Inhale are
         designed for this purpose: raising arms, expanding the chest, arching
@@ -38,25 +37,21 @@ const Info = () => {
         the spine from a forward bena, a twist or lateral position.
         <br />
         <br />
-
         According to the Viniyoga tradition generally Inhale begins with the
         expansion of the upper chest. As inhalation progresses, move the
         expansion down into the middle and finally into the lower portion of the
         rib cage.
         <br />
         <br />
-
         The normal unconscious exhalation is the result of the relaxation of the
         muscles responsible for Inhalation.
         <br />
         <br />
-
         The process is as follows: As the intercostal muscles relax the rib cage
         returns from its elevated position, as the diaphragm relaxes it raises
         up and the result is the expulsion of air from the lungs.
         <br />
         <br />
-
         Conscious use of exhalation does not follow natural processes. Rather
         than simply relaxing the muscles contracted for inhalation we
         intentionally contract the abdominal muscles progressively from the
@@ -68,71 +63,58 @@ const Info = () => {
         the deep transverse perineus.
         <br />
         <br />
-
         This action stabilizes the pelvic lumbar relationship, creates more
         structural stability, helps in flattening lumbar lordosis and when there
         is contraction of all the muscles mentioned above, it also supports the
         organs of the pelvis and lower abdomen.
         <br />
         <br />
-
         Inhale - Retain (Hold Breath after Inhale)
         <br />
         Exhale - Suspend (Hold Breath after exhale)
         <br />
         <br />
-
         Our Breath is divided into four parts. During our normal breathing we
         take a small pause when transitioning from inhale to exhale or exhale to
         inhale. The below breathwork is intentional and means to bring our
         awareness to our body and mind through breath.
         <br />
         <br />
-
         Retention helps strengthen our breath, stabilize our senses, increase
         our inner awareness, calm the mind and energize the body.
         <br />
         <br />
-
         The breathwork video below gives you an option to select the length of
         breath that works for you in the moment and try 6-12-16 breaths of your
         choice.
         <br />
         <br />
-
         In = Inhale ( through the nose)
         <br />
         R = Hold after Inhale
         <br />
-
         Ex = Exhale (through the nose mouth closed)
         <br />
         S = Hold after Exhale
         <br />
         <br />
-
         In = 4 ( Inhale cannot be longer than exhale)
         <br />
-
         Retain (Kumbhaka) = 4 (retention cannot be longer than inhale)
         <br />
-
         Exhale = 4 ( exhale needs to be equal to or greater than inhale)
         <br />
-
         Suspend (Rechaka)= 4 ( Suspension cannot be longer than the exhale)
         <br />
         <br />
-
         The above Ration is a SAMAMA practice of breathwork. Helps cultivate
         inner peace, balance and groundedness.
         <br />
         <br />
-
         In=R=EX=S - Samana Practice
       </div>
-    );
-}
+    </div>
+  );
+};
 
-
-export default Info
+export default Info;

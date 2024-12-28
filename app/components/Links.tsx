@@ -76,34 +76,39 @@ function formatTime(seconds: number) {
 
 const Links = () => {
   return (
-    <div className='flex flex-wrap gap-4 max-w-screen-md justify-center text-center'>
-      {mockFormulas.map((formula) => (
-        <Link
-          key={formula.link}
-          className={linkClass}
-          to={`/breath/${formula.link}`}
-        >
-          <div className='title font-semibold text-lg'>{formula.name}</div>
-          <div className='duration font-light'>
-            {formula.description}
-          </div>
-          <div className='duration tracking-widest font-light'>
-            {formula.timing}{' '}
-            <div className='text-xs font-bold'>x{formula.cycles}</div>
-          </div>
-          <div className='duration align-bottom text-right text-xs font-light'>
-            {formatTime(
-              formula?.timing
-                .split('-')
-                .reduce(
-                  (total: number, num: string) => total + parseInt(num, 10),
-                  0
-                ) * formula?.cycles
-            )}
-          </div>
-        </Link>
-      ))}
-    </div>
+    <>
+      <div className='p-2 bg-orange flex justify-center font-bold tracking-widest uppercase text-xl'>
+        Samples
+      </div>
+      <div className='p-2 bg-orange bg-opacity-50 flex justify-center'>
+        <div className='flex flex-wrap gap-4 max-w-screen-md justify-center text-center'>
+          {mockFormulas.map((formula) => (
+            <Link
+              key={formula.link}
+              className={linkClass}
+              to={`/breath/${formula.link}`}
+            >
+              <div className='title font-semibold text-lg'>{formula.name}</div>
+              <div className='duration font-light'>{formula.description}</div>
+              <div className='duration tracking-widest font-light'>
+                {formula.timing}{' '}
+                <div className='text-xs font-bold'>x{formula.cycles}</div>
+              </div>
+              <div className='duration align-bottom text-right text-xs font-light'>
+                {formatTime(
+                  formula?.timing
+                    .split('-')
+                    .reduce(
+                      (total: number, num: string) => total + parseInt(num, 10),
+                      0
+                    ) * formula?.cycles
+                )}
+              </div>
+            </Link>
+          ))}
+        </div>
+      </div>
+    </>
   );
 };
 
