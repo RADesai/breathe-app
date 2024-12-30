@@ -1,5 +1,5 @@
-import { useLocation, useNavigate } from 'react-router';
 import { useState } from 'react';
+import { useLocation, useNavigate } from 'react-router';
 import {
   Breath,
   breaths,
@@ -73,6 +73,7 @@ interface ControlsProps {
   breathCount: number;
 }
 
+// todo: form validate with fields, not current
 const Controls = (props: ControlsProps) => {
   const { resetAnimation, breathCount } = props;
   const navigate = useNavigate();

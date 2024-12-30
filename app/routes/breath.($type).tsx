@@ -1,11 +1,16 @@
 import { getAuth } from '@clerk/react-router/ssr.server';
 import { useCallback, useRef, useState } from 'react';
-import { AppLoadContext, useLoaderData, useOutletContext, useRouteError } from 'react-router';
+import {
+  AppLoadContext,
+  useLoaderData,
+  useOutletContext,
+  useRouteError
+} from 'react-router';
 import AudioControl from '~/components/AudioControl';
 import BreathTiles from '~/components/BreathTiles';
 import useGSAP from '~/hooks/useGSAP';
 
-import { Action, Breath, Duration, INHALE } from '~/utils/types';
+import { Action, Breath, INHALE } from '~/utils/types';
 
 export async function loader(args: {
   params: { type: string };
@@ -15,13 +20,11 @@ export async function loader(args: {
   // check auth
   const { params } = args;
   const { userId } = await getAuth(args);
-  console.log('in breath(type).loader, userId:', userId);
-  // If there's no userId, user is not logged in
+
   if (!userId) {
     console.log('in breath(type).loader, no user found:', userId);
-    // redirect them to sign-in or wherever you want
-    // return redirect('/sign-in');
   }
+
   if (params.type) {
     // TODO: use js map for list of changing breath timings
     try {
@@ -34,34 +37,35 @@ export async function loader(args: {
         console.error(`Invalid path format: ${type}`);
       }
 
-      let parsedObject: { [key: string]: number } = {};
+      let durations: { [key: string]: number } = {};
 
       if (longMatch) {
         const [, i, r, e, s, c] = longMatch;
-        parsedObject = {
+        durations = {
           inhale: parseInt(i) || 0,
           retention: parseInt(r) || 0,
           exhale: parseInt(e) || 0,
           suspension: parseInt(s) || 0,
           cycles: parseInt(c) || 0
         };
-        return parsedObject;
+        return Response.json({ durations, userId });
       } else if (shortMatch) {
         const [, i, e, c] = shortMatch;
-        parsedObject = {
+        durations = {
           inhale: parseInt(i),
           exhale: parseInt(e),
           cycles: parseInt(c) || 0
         };
-        return Response.json(parsedObject);
+        return Response.json({ durations, userId });
       } else {
         console.error(`Unable to match route: ${type}`);
       }
     } catch (error) {
-      console.error(error); // ? redirect
+      console.error(error);
     }
   }
-  return null;
+
+  return Response.json({ durations: null, userId: null });
 }
 
 interface OutletContext {
@@ -70,11 +74,12 @@ interface OutletContext {
   setAction: React.Dispatch<React.SetStateAction<Breath>>;
   // breathCount: number
 }
+
 export const buttonStyle =
   'bg-purple text-white rounded p-2 my-4 tracking-widest flex justify-between items-center shadow hover:shadow-purple disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none';
-// todo: form validate with fields, not current
+
 const BreathComp = () => {
-  const durations: Duration = useLoaderData();
+  const { durations, userId } = useLoaderData();
   const { action, setAction, setBreathCount } =
     useOutletContext<OutletContext>();
   const [isPlaying, setPlaying] = useState(false);
@@ -103,6 +108,16 @@ const BreathComp = () => {
     durations,
     audioRef
   });
+
+  if (!userId) {
+    return (
+      <div className='flex flex-wrap self-center justify-center overflow-scroll gap-1 pt-4 px-2 md:w-2/3 text-dark'>
+        <div className='font-semibold text-center my-10 text-xl tracking-widest uppercase'>
+          You need to be logged in to view this page.
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className='flex flex-wrap self-center justify-center overflow-scroll gap-1 pt-4 px-2 md:w-2/3 text-dark'>

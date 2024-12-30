@@ -4,7 +4,7 @@ import logo from '../logo.png';
 
 export default function Nav() {
   const { user, isSignedIn } = useUser();
-  console.log('in nav, user, isSignedIn:', user, isSignedIn);
+  console.log('in nav, props: user, isSignedIn:', user, isSignedIn);
 
   return (
     <nav className='p-2 grid grid-cols-5 items-center sm:px-10 md:px-20 border-b-2 border-dark'>
