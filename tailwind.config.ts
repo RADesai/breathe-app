@@ -7,7 +7,11 @@ export default {
       colors: {
         purple: '#E56399',
         orange: '#ffb24c',
-        dark: '#2d3142'
+        dark: '#605538'
+      },
+      fontFamily: {
+        catamaran: ['Catamaran', 'sans-serif'],
+        cherry: ['Cherry Swash', 'serif']
       }
     }
   },

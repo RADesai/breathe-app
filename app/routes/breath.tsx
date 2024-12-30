@@ -1,9 +1,9 @@
-import { Link, Outlet } from 'react-router';
+import { Outlet } from 'react-router';
 
 import { useState } from 'react';
 import { Breath as BreathType, INHALE } from '~/utils/types';
 
-import logo from '../logo.png';
+import Nav from '~/components/Nav';
 
 export default function Index() {
   const [action, setAction] = useState<BreathType>(INHALE);
@@ -11,12 +11,10 @@ export default function Index() {
 
   return (
     <div className='flex justify-center flex-col'>
-      <nav className='p-2 bg-orange flex items-center gap-4 text-2xl'>
-        <Link className='justify-center self-center max-w-20' to='/'>
-          <img src={logo} alt='Divine Studio Logo' />
-        </Link>
-        Divine Studio
-      </nav>
+      <Nav />
+      <div className='p-2 bg-orange flex justify-center font-bold tracking-widest uppercase text-xl'>
+        Breath
+      </div>
       <Outlet
         context={{
           action,

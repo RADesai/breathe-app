@@ -13,7 +13,9 @@ export default function Nav() {
       <Link className='max-w-20' to='/'>
         <img src={logo} alt='Divine Studio Logo' />
       </Link>
-      <div className='m-8 text-2xl'>Divine Studio <Breathwork /></div>
+      <div className='m-8 text-2xl font-cherry'>
+        Divine Studio <Breathwork />
+      </div>
     </nav>
   );
 }

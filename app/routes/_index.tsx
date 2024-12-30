@@ -4,7 +4,7 @@ import Nav from '~/components/Nav';
 
 export default function Index() {
   return (
-    <div className='flex justify-center flex-col text-dark'>
+    <div className='flex justify-center flex-col'>
       <Nav />
       <Links />
       <Info />

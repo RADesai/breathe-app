@@ -80,7 +80,7 @@ const Links = () => {
       <div className='p-2 bg-orange flex justify-center font-bold tracking-widest uppercase text-xl'>
         Samples
       </div>
-      <div className='p-2 bg-orange bg-opacity-50 flex justify-center'>
+      <div className='p-2 flex justify-center'>
         <div className='flex flex-wrap gap-4 max-w-screen-md justify-center text-center'>
           {mockFormulas.map((formula) => (
             <Link

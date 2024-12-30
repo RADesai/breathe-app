@@ -1,9 +1,7 @@
 const Info = () => {
   return (
-    <div className='p-2'>
-      <div>Info:</div>
-
-      <div className='text-pretty'>
+    <div className='p-4 bg-orange'>
+      <div className='max-w-screen-md flex justify-self-center'>
         Guided Diaphragmatic Breathing
         <br />
         <br />
