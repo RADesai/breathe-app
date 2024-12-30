@@ -1,7 +1,7 @@
 import { Link } from 'react-router';
 
 const linkClass =
-  'bg-white p-1 rounded h-44 w-44 flex flex-col justify-between text-sm font-bold justify-around px-2 shadow-orange';
+  'bg-white p-1 rounded h-44 w-44 flex flex-col justify-between text-sm font-bold justify-around px-2 shadow-orange group';
 
 interface Formula {
   name: string;
@@ -88,7 +88,9 @@ const Links = () => {
               className={linkClass}
               to={`/breath/${formula.link}`}
             >
-              <div className='title font-semibold text-lg'>{formula.name}</div>
+              <div className='title font-semibold text-lg group-hover:underline group-focus:underline'>
+                {formula.name}
+              </div>
               <div className='duration font-light'>{formula.description}</div>
               <div className='duration tracking-widest font-light'>
                 {formula.timing}{' '}

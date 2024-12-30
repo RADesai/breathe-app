@@ -1,12 +1,27 @@
+import { getAuth } from '@clerk/react-router/ssr.server';
 import { useCallback, useRef, useState } from 'react';
-import { LoaderFunctionArgs, useLoaderData, useOutletContext, useRouteError } from 'react-router';
+import { AppLoadContext, useLoaderData, useOutletContext, useRouteError } from 'react-router';
 import AudioControl from '~/components/AudioControl';
 import BreathTiles from '~/components/BreathTiles';
 import useGSAP from '~/hooks/useGSAP';
 
 import { Action, Breath, Duration, INHALE } from '~/utils/types';
 
-export async function loader({ params }: LoaderFunctionArgs) {
+export async function loader(args: {
+  params: { type: string };
+  request: Request;
+  context: AppLoadContext;
+}) {
+  // check auth
+  const { params } = args;
+  const { userId } = await getAuth(args);
+  console.log('in breath(type).loader, userId:', userId);
+  // If there's no userId, user is not logged in
+  if (!userId) {
+    console.log('in breath(type).loader, no user found:', userId);
+    // redirect them to sign-in or wherever you want
+    // return redirect('/sign-in');
+  }
   if (params.type) {
     // TODO: use js map for list of changing breath timings
     try {

@@ -12,7 +12,7 @@ export default function Index() {
   return (
     <div className='flex justify-center flex-col'>
       <Nav />
-      <div className='p-2 bg-orange flex justify-center font-bold tracking-widest uppercase text-xl'>
+      <div className='p-2 bg-purple flex justify-center font-bold tracking-widest uppercase text-xl text-white'>
         Breath
       </div>
       <Outlet
