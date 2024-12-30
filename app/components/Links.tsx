@@ -76,7 +76,7 @@ function formatTime(seconds: number) {
 
 const Links = () => {
   return (
-    <>
+    <div className='border-b-2 border-dark'>
       <div className='p-2 bg-orange flex justify-center font-bold tracking-widest uppercase text-xl'>
         Samples
       </div>
@@ -110,7 +110,7 @@ const Links = () => {
           ))}
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
