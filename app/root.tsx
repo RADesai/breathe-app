@@ -1,7 +1,4 @@
 import { Route } from '.react-router/types/app/+types/root';
-import { ClerkProvider } from '@clerk/react-router';
-import { rootAuthLoader } from '@clerk/react-router/ssr.server';
-import { useEffect } from 'react';
 import {
   isRouteErrorResponse,
   Links,
@@ -9,11 +6,8 @@ import {
   Meta,
   MetaFunction,
   Outlet,
-  redirect,
   Scripts,
-  ScrollRestoration,
-  useLocation,
-  useNavigate
+  ScrollRestoration
 } from 'react-router';
 import stylesheet from '~/tailwind.css?url';
 
@@ -39,23 +33,6 @@ export const meta: MetaFunction = () => {
   ];
 };
 
-export async function loader(args: Route.LoaderArgs) {
-  const { request } = args;
-  const url = new URL(request.url);
-
-  // Check if __clerk_handshake is in the query parameters
-  if (url.searchParams.has('__clerk_handshake')) {
-    // Remove the handshake parameter
-    url.searchParams.delete('__clerk_handshake');
-
-    // Redirect to the same URL without the handshake parameter
-    return redirect(url.pathname + url.search);
-  }
-
-  // Proceed with the regular Clerk rootAuthLoader logic
-  return rootAuthLoader(args);
-}
-
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang='en'>
@@ -74,30 +51,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
   );
 }
 
-export default function App({ loaderData }: Route.ComponentProps) {
-  const location = useLocation();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    // Remove the handshake parameter on the client side
-    const url = new URL(window.location.href);
-    if (url.searchParams.has('__clerk_handshake')) {
-      url.searchParams.delete('__clerk_handshake');
-      navigate(url.pathname + url.search, { replace: true });
-    }
-  }, [location, navigate]);
-
-  return (
-    <ClerkProvider
-      loaderData={loaderData}
-      signUpFallbackRedirectUrl='/'
-      signInFallbackRedirectUrl='/'
-    >
-      <main>
-        <Outlet />
-      </main>
-    </ClerkProvider>
-  );
+export default function App() {
+  return <Outlet />;
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {

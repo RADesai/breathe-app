@@ -1,4 +1,3 @@
-import { getAuth } from '@clerk/react-router/ssr.server';
 import { useCallback, useRef, useState } from 'react';
 import {
   AppLoadContext,
@@ -19,11 +18,6 @@ export async function loader(args: {
 }) {
   // check auth
   const { params } = args;
-  const { userId } = await getAuth(args);
-
-  if (!userId) {
-    console.log('in breath(type).loader, no user found:', userId);
-  }
 
   if (params.type) {
     // TODO: use js map for list of changing breath timings
@@ -48,7 +42,7 @@ export async function loader(args: {
           suspension: parseInt(s) || 0,
           cycles: parseInt(c) || 0
         };
-        return Response.json({ durations, userId });
+        return Response.json({ durations });
       } else if (shortMatch) {
         const [, i, e, c] = shortMatch;
         durations = {
@@ -56,7 +50,7 @@ export async function loader(args: {
           exhale: parseInt(e),
           cycles: parseInt(c) || 0
         };
-        return Response.json({ durations, userId });
+        return Response.json({ durations });
       } else {
         console.error(`Unable to match route: ${type}`);
       }
@@ -95,6 +89,16 @@ const BreathComp = () => {
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
+  // if (!userId) {
+  //   return (
+  //     <div className='flex flex-wrap self-center justify-center overflow-scroll gap-1 pt-4 px-2 md:w-2/3 text-dark'>
+  //       <div className='font-semibold text-center my-10 text-xl tracking-widest uppercase'>
+  //         You need to be logged in to view this page.
+  //       </div>
+  //     </div>
+  //   );
+  // }
+
   // todo: extract animation to comp?
   const { toggleAnimation, seconds, restartAnimation } = useGSAP({
     isPlaying,
@@ -108,16 +112,6 @@ const BreathComp = () => {
     durations,
     audioRef
   });
-
-  if (!userId) {
-    return (
-      <div className='flex flex-wrap self-center justify-center overflow-scroll gap-1 pt-4 px-2 md:w-2/3 text-dark'>
-        <div className='font-semibold text-center my-10 text-xl tracking-widest uppercase'>
-          You need to be logged in to view this page.
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className='flex flex-wrap self-center justify-center overflow-scroll gap-1 pt-4 px-2 md:w-2/3 text-dark'>
