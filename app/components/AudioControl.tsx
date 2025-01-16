@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { buttonStyle } from '~/routes/breath.($type)';
+import { animationStyles } from '~/utils/styles';
 
 interface AudioControlProps {
   audioRef: React.MutableRefObject<HTMLAudioElement | null>;
@@ -18,7 +18,7 @@ const AudioControl = (props: AudioControlProps) => {
 
   return (
     <div>
-      <button onClick={muteAudio} className={buttonStyle}>
+      <button onClick={muteAudio} className={animationStyles.controlButton}>
         {!muted ? (
           <svg
             xmlns='http://www.w3.org/2000/svg'
@@ -27,6 +27,7 @@ const AudioControl = (props: AudioControlProps) => {
             strokeWidth='1.5'
             stroke='currentColor'
             className='w-8 h-8'
+            // todo: className='size-8'
           >
             <path
               strokeLinecap='round'

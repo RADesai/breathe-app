@@ -65,7 +65,7 @@ export interface ErrorProps {
 const Error = (props: ErrorProps) => {
   const { error } = props;
 
-  return <div className='text-sm text-red-700'>{error}</div>;
+  return <div className='text-sm text-red'>{error}</div>;
 };
 
 interface ControlsProps {
@@ -183,7 +183,7 @@ const Controls = (props: ControlsProps) => {
                   value={settings[breath]}
                   className={`rounded w-14 text-lg ml-3 px-1 border ${
                     errors[breath]
-                      ? ' text-red-700 border-red-700'
+                      ? ' text-red border-red'
                       : 'border-slate-200'
                   }`}
                   name={breath}

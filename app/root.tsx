@@ -1,4 +1,5 @@
 import { Route } from '.react-router/types/app/+types/root';
+import { Session } from '@supabase/supabase-js';
 import {
   isRouteErrorResponse,
   Links,
@@ -7,9 +8,12 @@ import {
   MetaFunction,
   Outlet,
   Scripts,
-  ScrollRestoration
+  ScrollRestoration,
+  useLoaderData
 } from 'react-router';
 import stylesheet from '~/tailwind.css?url';
+import GoogleOneTap from './components/auth/GoogleOneTap';
+import { supabaseServer } from './db/supabaseServer';
 
 export const links: LinksFunction = () => [
   { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
@@ -33,6 +37,27 @@ export const meta: MetaFunction = () => {
   ];
 };
 
+export async function loader() {
+  const { data, error } = await supabaseServer.auth.getSession();
+
+  if (error || !data.session) {
+    console.log('active session NOT found', error);
+    return {};
+  }
+
+  const user = {
+    id: data.session.user.id,
+    email: data.session.user.email,
+    user_metadata: data.session.user.user_metadata // Include specific metadata
+  };
+
+  return { user };
+}
+
+type LoaderData = {
+  user?: Session['user'];
+};
+
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang='en'>
@@ -41,19 +66,29 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <meta name='viewport' content='width=device-width, initial-scale=1' />
         <Meta />
         <Links />
-      </head>
-      <body className='text-dark bg-[#e9cc94] font-catamaran'>
-        {children}
         <ScrollRestoration />
         <Scripts />
-      </body>
+      </head>
+      <body className='text-dark bg-lightPink font-catamaran'>{children}</body>
     </html>
   );
 }
 
 export default function App() {
-  return <Outlet />;
+  const { user } = useLoaderData<LoaderData>();
+
+  console.log('<root> current user:', user);
+  console.log('<root> user.metadata', user?.user_metadata?.name);
+
+  return (
+    <>
+      {/* <GoogleOneTap /> */}
+      <Outlet context={{ user }} />
+    </>
+  );
 }
+
+export type OutletContext = { user: LoaderData['user'] };
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   let message = 'Oops!';

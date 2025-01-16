@@ -62,7 +62,7 @@ const BreathTiles = ({ action, durations, seconds }: BreathsProps) => {
             key={step}
             className={`rounded text-center p-2 ${
               isActive
-                ? 'text-white bg-purple underline-offset-4'
+                ? 'text-white bg-pink underline-offset-4'
                 : 'opacity-50'
             }`}
           >

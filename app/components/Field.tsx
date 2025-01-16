@@ -11,7 +11,7 @@ export interface ErrorProps {
 const Error = (props: ErrorProps) => {
   const { error } = props;
 
-  return <div className='text-sm text-red-700 '>{error}</div>;
+  return <div className='text-sm text-red '>{error}</div>;
 };
 
 export interface FieldProps {
@@ -32,7 +32,7 @@ const Field = (props: FieldProps) => {
         <input
           onChange={updateBreath}
           className={`rounded w-14 text-lg ml-3 px-1 border ${
-            error ? ' text-red-700 border-red-700' : 'border-slate-200'
+            error ? ' text-red border-red' : 'border-slate-200'
           }`}
           name={name}
           type='number'

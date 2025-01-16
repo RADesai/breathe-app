@@ -8,6 +8,7 @@ import {
 import AudioControl from '~/components/AudioControl';
 import BreathTiles from '~/components/BreathTiles';
 import useGSAP from '~/hooks/useGSAP';
+import { animationStyles } from '~/utils/styles';
 
 import { Action, Breath, INHALE } from '~/utils/types';
 
@@ -68,9 +69,6 @@ interface OutletContext {
   setAction: React.Dispatch<React.SetStateAction<Breath>>;
   // breathCount: number
 }
-
-export const buttonStyle =
-  'bg-purple text-white rounded p-2 my-4 tracking-widest flex justify-between items-center shadow hover:shadow-purple disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none';
 
 const BreathComp = () => {
   const { durations, userId } = useLoaderData();
@@ -157,7 +155,7 @@ const BreathComp = () => {
           <AudioControl audioRef={audioRef} />
           <button
             disabled={!isPlaying}
-            className={buttonStyle}
+            className={animationStyles.controlButton}
             onClick={() => {
               if (isPlaying) {
                 console.log(
@@ -186,7 +184,7 @@ const BreathComp = () => {
           </button>
           <button
             disabled={isPlaying}
-            className={buttonStyle}
+            className={animationStyles.controlButton}
             onClick={() => {
               if (!isPlaying) {
                 setPlaying(true);
@@ -211,7 +209,7 @@ const BreathComp = () => {
             </svg>
           </button>
           <div>
-            <button className={buttonStyle} onClick={() => restartAnimation()}>
+            <button className={animationStyles.controlButton} onClick={() => restartAnimation()}>
               <svg
                 xmlns='http://www.w3.org/2000/svg'
                 fill='none'
@@ -243,7 +241,7 @@ export function ErrorBoundary() {
   // error.message = "Unexpected Server Error"
   // error.stack = undefined
   return (
-    <div className='flex flex-wrap justify-around overflow-scroll gap-1 font-bold bg-red-400 p-2'>
+    <div className='flex flex-wrap justify-around overflow-scroll gap-1 font-bold bg-red p-2'>
       Error loading animation, please try again...
     </div>
   );
