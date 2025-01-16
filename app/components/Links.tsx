@@ -77,9 +77,6 @@ function formatTime(seconds: number) {
 const Links = () => {
   return (
     <div className='border-b-2 border-dark'>
-      <div className='p-2 bg-white flex justify-center font-bold tracking-widest uppercase text-xl'>
-        Samples
-      </div>
       <div className='p-2 flex justify-center'>
         <div className='flex flex-wrap gap-4 max-w-screen-md justify-center text-center'>
           {mockFormulas.map((formula) => (

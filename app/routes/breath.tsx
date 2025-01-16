@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Breath as BreathType, INHALE } from '~/utils/types';
 
 import Nav from '~/components/Nav';
+import Bar from '~/components/Bar';
 
 export default function Index() {
   const [action, setAction] = useState<BreathType>(INHALE);
@@ -12,9 +13,7 @@ export default function Index() {
   return (
     <div className='flex justify-center flex-col'>
       <Nav />
-      <div className='p-2 bg-pink flex justify-center font-bold tracking-widest uppercase text-xl text-white'>
-        Breath
-      </div>
+      <Bar title="Breath" className="bg-pink text-white" />
       <Outlet
         context={{
           action,

@@ -8,7 +8,7 @@ export async function action({ request }: Route.ActionArgs) {
   const email = formData.get('email') as string;
   const password = formData.get('password') as string;
 
-  const { error } = await supabaseServer.auth.signInWithPassword({
+  const { data, error } = await supabaseServer.auth.signInWithPassword({
     email,
     password
   });
@@ -17,6 +17,7 @@ export async function action({ request }: Route.ActionArgs) {
     return { error: error.message };
   }
 
+  console.log('Sign-in action complete:', data);
   return redirect('/profile'); // Redirect on successful sign-in
 }
 

@@ -5,6 +5,7 @@ import {
   useNavigate,
   useOutletContext
 } from 'react-router';
+import Spinner from '~/components/Spinner';
 import { OutletContext } from '~/root';
 import { formStyles } from '~/utils/styles';
 
@@ -33,7 +34,12 @@ export default function Profile() {
   if (user === undefined) {
     console.log('<Profile> "user = undefined"');
     // Optionally show a loading spinner while resolving user state
-    return <div>Loading...</div>;
+    return (
+      <div className='flex flex-col items-center'>
+        <Spinner />
+        <div>Loading...</div>
+      </div>
+    );
   }
 
   if (!user) {

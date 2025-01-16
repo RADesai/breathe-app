@@ -6,6 +6,12 @@ const supabasePublicKey = import.meta.env.VITE_SUPABASE_PUBLIC_KEY!;
 export const supabase = createClient(supabaseUrl, supabasePublicKey, {
   auth: {
     persistSession: true,
-    detectSessionInUrl: true
-  }
+    autoRefreshToken: true,
+    detectSessionInUrl: true,
+  },
+  global: {
+    headers: {
+      "X-Use-Cookies": "true",
+    },
+  },
 });
