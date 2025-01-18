@@ -25,9 +25,9 @@ export default function MagicLink() {
           return;
         }
 
-        console.log("Session refreshed successfully");
+        console.log("refreshSession() success!!");
         console.log("Magic link refreshSession():", refreshResult);
-        console.log("Cookies:", document.cookie); // Inspect cookies
+        console.log("Client side Cookies:", document.cookie); // Inspect cookies
         console.log("supabase.auth:", supabase.auth);
         // Redirect to profile & force reload to sync session with server
         window.location.href = "/";

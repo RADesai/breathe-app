@@ -1,5 +1,4 @@
 import { Route } from ".react-router/types/app/+types/root";
-import { Session } from "@supabase/supabase-js";
 import {
   isRouteErrorResponse,
   Links,
@@ -8,13 +7,11 @@ import {
   MetaFunction,
   Outlet,
   Scripts,
-  ScrollRestoration,
-  useLoaderData,
+  ScrollRestoration
 } from "react-router";
 import stylesheet from "~/tailwind.css?url";
-import GoogleOneTap from "./components/auth/GoogleOneTap";
-import { supabaseServer } from "./db/supabaseServer";
-import { supabase } from "./db/supabaseClient";
+
+import { SessionProvider } from "./context/SessionProvider";
 
 export const links: LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -38,37 +35,6 @@ export const meta: MetaFunction = () => {
   ];
 };
 
-export async function loader({ request }: { request: Request }) {
-  const { data, error } = await supabaseServer.auth.getSession();
-
-  const cookies = request.headers.get("cookie");
-  console.log("Cookies received in root loader:", cookies);
-
-  // use client session as backup:
-  if (error || !data.session) {
-    console.log("No session found server-side, checking client...", error);
-    const clientSession = await supabase.auth.getSession();
-
-    console.log(
-      "No session found client-side, checking client...",
-      clientSession,
-    );
-
-    if (!clientSession.data.session) {
-      return {};
-    }
-
-    return { user: clientSession.data.session.user };
-  }
-
-  console.log("Retrieved server session in <root> loader:", data);
-  return { user: data.session.user };
-}
-
-type LoaderData = {
-  user?: Session["user"];
-};
-
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
@@ -86,19 +52,20 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  const { user } = useLoaderData<LoaderData>();
-  console.log("<root> current user:", user);
-  console.log("<root> user.metadata", user?.user_metadata?.name);
+  // const { user } = useLoaderData<LoaderData>();
+  // console.log("<root> current user:", user);
+  // console.log("<root> user.metadata", user?.user_metadata?.name);
 
   return (
-    <>
+    <SessionProvider>
       {/* <GoogleOneTap /> */}
-      <Outlet context={{ user }} />
-    </>
+      {/* <Outlet context={{ user }} /> */}
+      <Outlet />
+    </SessionProvider>
   );
 }
 
-export type OutletContext = { user: LoaderData["user"] };
+// export type OutletContext = { user: LoaderData["user"] };
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   let message = "Oops!";
@@ -109,7 +76,7 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
     message = error.status === 404 ? "404" : "Error";
     details =
       error.status === 404
-        ? "The requested page could not be found."
+        ? "Sorry! The requested page could not be found. We are still under construction so please forgive us!"
         : error.statusText || details;
   } else if (import.meta.env.DEV && error && error instanceof Error) {
     details = error.message;

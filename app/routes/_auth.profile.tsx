@@ -2,15 +2,15 @@ import { useEffect } from 'react';
 import {
   Form,
   useActionData,
-  useNavigate,
-  useOutletContext
+  useNavigate
 } from 'react-router';
 import Spinner from '~/components/Spinner';
-import { OutletContext } from '~/root';
+import { useSession } from '~/context/SessionProvider';
 import { formStyles } from '~/utils/styles';
 
 export default function Profile() {
-  const { user } = useOutletContext<OutletContext>();
+  // const { user } = useOutletContext<OutletContext>();
+  const session = useSession();
   const navigate = useNavigate();
 
   const actionData = useActionData<{ error?: string }>();
@@ -18,20 +18,20 @@ export default function Profile() {
   // Redirect to /signin if no user session exists
   useEffect(() => {
     console.log('<Profile.useEffect>');
-    if (user === undefined) {
-      console.log('<Profile.useEffect> "user = undefined"');
-      // Skip redirect logic until the user object is fully resolved
+    if (session?.user === undefined) {
+      console.log('<Profile.useEffect> "session?.user = undefined"');
+      // Skip redirect logic until the session?.user object is fully resolved
       return;
     }
 
-    if (!user) {
-      console.log('<Profile.useEffect> !user -> navigate("/signin")');
+    if (!session?.user) {
+      console.log('<Profile.useEffect> !session?.user -> navigate("/signin")');
       navigate('/signin');
     }
-  }, [user, navigate]);
+  }, [session?.user, navigate]);
 
   // Avoid rendering while user is undefined
-  if (user === undefined) {
+  if (session?.user === undefined) {
     console.log('<Profile> "user = undefined"');
     // Optionally show a loading spinner while resolving user state
     return (
@@ -42,15 +42,15 @@ export default function Profile() {
     );
   }
 
-  if (!user) {
-    console.log('<Profile> !user');
-    return null; // Prevent rendering if no user exists
+  if (!session?.user) {
+    console.log('<Profile> !session?.user');
+    return null; // Prevent rendering if no session?.user exists
   }
 
   return (
     <div className='flex flex-col gap-4'>
       <h1 className='text-2xl font-bold'>Profile</h1>
-      <div className='text-lg'>Welcome, {user.email || 'Guest'}!</div>
+      <div className='text-lg'>Welcome, {session?.user.email || 'Guest'}!</div>
 
       {actionData?.error && (
         <div className='text-red mt-2'>{actionData.error}</div>

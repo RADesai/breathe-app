@@ -1,12 +1,14 @@
 import { Link, useNavigate, useOutletContext } from 'react-router';
 import { OutletContext } from '~/root';
 import logo from '../logo.png';
+import { useSession } from '~/context/SessionProvider';
 
 export default function Nav() {
   // todo: navigate to '/signin' if no user || '/profile' with user
   // todo: style user button for active/inactive user session
   const navigate = useNavigate();
-  const { user } = useOutletContext<OutletContext>();
+  // const { user } = useOutletContext<OutletContext>();
+  const session = useSession();
 
   return (
     <nav className='p-2 grid grid-cols-5 items-center sm:px-10 border-b-2 border-dark'>
@@ -26,12 +28,13 @@ export default function Nav() {
         </div>
         Breathwork
       </div>
-      <button
+      <div className='text-xs text-purple font-cherry font-bold'>This website is still a work in progress!</div>
+      {/* <button
         className='text-right cursor-pointer hover:underline'
-        onClick={() => (user ? navigate('/profile') : navigate('/signin'))}
+        onClick={() => (session?.user ? navigate('/profile') : navigate('/signin'))}
       >
-        {user ? user.user_metadata.name : 'User'}
-      </button>
+        {session?.user ? session?.user.user_metadata.name : 'User'}
+      </button> */}
     </nav>
   );
 }
