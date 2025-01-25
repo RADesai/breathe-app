@@ -3,7 +3,7 @@ import { User } from '@supabase/supabase-js';
 import { ParseError, parsePhoneNumberWithError } from 'libphonenumber-js';
 import { redirect } from 'react-router';
 import AuthForm from '~/components/auth/AuthForm';
-import { supabaseServer } from '~/db/supabaseServer';
+import { getSupabaseServer } from '~/db/supabaseServer';
 
 export async function action({ request }: Route.ActionArgs) {
   const formData = await request.formData();
@@ -18,6 +18,7 @@ export async function action({ request }: Route.ActionArgs) {
     return { error: 'All fields are required.' };
   }
 
+  const supabaseServer = getSupabaseServer(request);
   const {
     data: { users },
     error: userCheckError

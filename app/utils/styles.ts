@@ -2,8 +2,13 @@
 const label = `font-cherry`;
 const input = `py-2 px-3 border text-sm border-dark border-opacity-50 drop-shadow rounded-lg`;
 const inputError = `${input} border-red bg-red bg-opacity-20`;
-const submitButton = `border border-opacity-10 py-2 px-3 w-full rounded-lg border-dark bg-orange justify-items-center`;
+
+// BUTTONS
+const submitButton = `border border-opacity-10 hover:border-opacity-100 py-2 px-3 w-full rounded-lg border-dark bg-purple justify-items-center text-white`;
 const outlineButton = `border border-opacity-75 hover:border-opacity-100 py-2 px-3 w-full rounded-lg border-purple justify-items-center`;
+
+// LINKS
+const link = `text-purple hover:underline font-bold`;
 
 // STATUS
 const statusBox = `border-2 w-full bg-dark bg-opacity-80 p-2 border-dark text-dark text-sm font-bold rounded`;
@@ -23,6 +28,7 @@ export const formStyles = {
   inputError,
   submitButton,
   outlineButton,
+  link,
   error,
   success
 };

@@ -1,66 +1,55 @@
-import { useEffect } from 'react';
-import {
-  Form,
-  useActionData,
-  useNavigate
-} from 'react-router';
-import Spinner from '~/components/Spinner';
-import { useSession } from '~/context/SessionProvider';
-import { formStyles } from '~/utils/styles';
+import { Link, useActionData, useNavigate } from "react-router";
+import Spinner from "~/components/Spinner";
+import { useSession } from "~/context/SessionProvider";
+import { formStyles } from "~/utils/styles";
 
 export default function Profile() {
-  // const { user } = useOutletContext<OutletContext>();
-  const session = useSession();
+  const { session, clearSession } = useSession();
   const navigate = useNavigate();
-
   const actionData = useActionData<{ error?: string }>();
 
-  // Redirect to /signin if no user session exists
-  useEffect(() => {
-    console.log('<Profile.useEffect>');
-    if (session?.user === undefined) {
-      console.log('<Profile.useEffect> "session?.user = undefined"');
-      // Skip redirect logic until the session?.user object is fully resolved
-      return;
-    }
+  if (!session?.user) {
+    console.log("<Profile> !session?.user");
 
-    if (!session?.user) {
-      console.log('<Profile.useEffect> !session?.user -> navigate("/signin")');
-      navigate('/signin');
-    }
-  }, [session?.user, navigate]);
-
-  // Avoid rendering while user is undefined
-  if (session?.user === undefined) {
-    console.log('<Profile> "user = undefined"');
-    // Optionally show a loading spinner while resolving user state
     return (
-      <div className='flex flex-col items-center'>
-        <Spinner />
-        <div>Loading...</div>
+      <div className="flex flex-col items-center">
+        <p className="text-center font-cherry text-sm">
+          Please <Link
+            className={formStyles.link}
+            to="/signin"
+          >Login
+          </Link> to access your profile.
+        </p>
       </div>
     );
   }
 
-  if (!session?.user) {
-    console.log('<Profile> !session?.user');
-    return null; // Prevent rendering if no session?.user exists
-  }
+  const handleLogout = async () => {
+    try {
+      console.log("<Profile> handleLogout! POST(/logout)");
+      await fetch("/logout", { method: "POST" }); // Call server action
+      console.log("<Profile> handleLogout! clearSession()");
+      clearSession(); // Clear client session
+      console.log("<Profile> handleLogout! navigate(/signin)");
+      navigate("/signin");
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
 
   return (
-    <div className='flex flex-col gap-4'>
-      <h1 className='text-2xl font-bold'>Profile</h1>
-      <div className='text-lg'>Welcome, {session?.user.email || 'Guest'}!</div>
+    <div className="flex flex-col gap-4">
+      <div className="text-lg">
+        {session?.user.user_metadata.name || "Guest"}!
+      </div>
 
       {actionData?.error && (
-        <div className='text-red mt-2'>{actionData.error}</div>
+        <div className={formStyles.error}>{actionData.error}</div>
       )}
 
-      <Form method='post' action='/logout'>
-        <button type='submit' className={formStyles.submitButton}>
-          Logout
-        </button>
-      </Form>
+      <button onClick={handleLogout} className={formStyles.submitButton}>
+        Logout
+      </button>
     </div>
   );
 }

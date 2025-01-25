@@ -7,11 +7,15 @@ import {
   MetaFunction,
   Outlet,
   Scripts,
-  ScrollRestoration
+  ScrollRestoration,
+  useLoaderData,
 } from "react-router";
 import stylesheet from "~/tailwind.css?url";
 
 import { SessionProvider } from "./context/SessionProvider";
+import { getSupabaseServer } from "./db/supabaseServer";
+import { Session } from "@supabase/supabase-js";
+import { sessionCookie } from "./db/cookies";
 
 export const links: LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -35,12 +39,34 @@ export const meta: MetaFunction = () => {
   ];
 };
 
+export async function loader({ request }: { request: Request }) {
+  const cookieHeader = request.headers.get("Cookie");
+  const accessToken = await sessionCookie.parse(cookieHeader);
+
+  if (!accessToken) {
+    console.log("<root loader> No access token found, returning null session");
+    return { session: null };
+  }
+
+  const supabaseServer = getSupabaseServer(request);
+  const { data, error } = await supabaseServer.auth.getUser(accessToken);
+
+  if (error || !data.user) {
+    console.log("<root loader> Invalid or expired session");
+    return { session: null };
+  }
+
+  console.log("<root> loader()... Server User found:", data.user);
+  return { session: { user: data.user } };
+}
+
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        {/* <meta httpEquiv="Content-Security-Policy" /> */}
         <Meta />
         <Links />
         <ScrollRestoration />
@@ -51,21 +77,20 @@ export function Layout({ children }: { children: React.ReactNode }) {
   );
 }
 
+type LoaderData = {
+  session?: Session;
+};
+
 export default function App() {
-  // const { user } = useLoaderData<LoaderData>();
-  // console.log("<root> current user:", user);
-  // console.log("<root> user.metadata", user?.user_metadata?.name);
+  const { session } = useLoaderData<LoaderData>();
 
   return (
-    <SessionProvider>
+    <SessionProvider serverSession={session}>
       {/* <GoogleOneTap /> */}
-      {/* <Outlet context={{ user }} /> */}
       <Outlet />
     </SessionProvider>
   );
 }
-
-// export type OutletContext = { user: LoaderData["user"] };
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   let message = "Oops!";

@@ -1,11 +1,17 @@
-import { Form, useActionData, useNavigate, useNavigation } from 'react-router';
-import { formStyles } from '~/utils/styles';
+import {
+  Form,
+  Link,
+  useActionData,
+  useNavigate,
+  useNavigation,
+} from "react-router";
+import { formStyles } from "~/utils/styles";
 
-import logo from '../../logo.png';
-import Spinner from '../Spinner';
+import logo from "../../logo.png";
+import Spinner from "../Spinner";
 
-import { AsYouType } from 'libphonenumber-js';
-import { useState } from 'react';
+import { AsYouType } from "libphonenumber-js";
+import { useState } from "react";
 
 type AuthFormProps = {
   actionUrl: string;
@@ -14,46 +20,43 @@ type AuthFormProps = {
 
 export default function AuthForm({ actionUrl, buttonText }: AuthFormProps) {
   const actionData = useActionData<{ error?: string; success?: string }>();
-  console.log('<auth form> props:', actionUrl);
-  console.log('<auth form> actionData:', actionData);
   const navigate = useNavigate();
-
-  const isRegistration = actionUrl === '/signup';
-
   const navigation = useNavigation();
-  const isLoading = navigation.state === 'submitting';
+
+  const isRegistration = actionUrl === "/signup";
+  const isLoading = navigation.state === "submitting";
 
   // todo: client side validation
-  const [phoneNumber, setPhoneNumber] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState("");
 
   return (
-    <div className='auth-form mb-10'>
+    <div className="auth-form mb-10">
       <Form
-        method='post'
+        method="post"
         action={actionUrl}
-        className='py-8 px-10 bg-white border border-dark border-opacity-50 drop-shadow-lg rounded-lg flex flex-col gap-6'
+        className="flex flex-col gap-6 rounded-lg border border-dark border-opacity-50 bg-white px-10 py-8 drop-shadow-lg"
       >
         <img
           src={logo}
-          className='max-w-16 self-center'
-          alt='Divine Studio Logo'
+          className="max-w-16 self-center"
+          alt="Divine Studio Logo"
         />
 
         {isRegistration ? (
           <div>
-            <h1 className='text-xl text-center font-bold'>
+            <h1 className="text-center text-xl font-bold">
               Register for Access
             </h1>
-            <h3 className='text-sm text-center font-cherry'>
+            <h3 className="text-center font-cherry text-sm">
               Please register to use our breathing tool
             </h3>
           </div>
         ) : (
           <div>
-            <h1 className='text-xl text-center font-bold'>
+            <h1 className="text-center text-xl font-bold">
               Sign in to Breathwork
             </h1>
-            <h3 className='text-sm text-center font-cherry'>
+            <h3 className="text-center font-cherry text-sm">
               Please sign in to use our breathing tool
             </h3>
           </div>
@@ -68,37 +71,37 @@ export default function AuthForm({ actionUrl, buttonText }: AuthFormProps) {
           Continue with Google
         </button> */}
 
-        <div className='flex flex-col gap-4'>
+        <div className="flex flex-col gap-4">
           {isRegistration && (
             <>
-              <div className='flex flex-col'>
-                <label className={formStyles.label} htmlFor='name'>
+              <div className="flex flex-col">
+                <label className={formStyles.label} htmlFor="name">
                   Name:
                 </label>
                 <input
-                  type='text'
-                  name='name'
+                  type="text"
+                  name="name"
                   required
                   className={
                     actionData?.error ? formStyles.inputError : formStyles.input
                   }
-                  autoComplete='name'
+                  autoComplete="name"
                 />
               </div>
-              <div className='flex flex-col'>
-                <label className={formStyles.label} htmlFor='phone'>
+              <div className="flex flex-col">
+                <label className={formStyles.label} htmlFor="phone">
                   Phone:
                 </label>
                 <input
-                  type='text'
-                  name='phone'
+                  type="text"
+                  name="phone"
                   required
                   className={
                     actionData?.error ? formStyles.inputError : formStyles.input
                   }
-                  autoComplete='tel'
+                  autoComplete="tel"
                   onChange={(e) => {
-                    setPhoneNumber(new AsYouType('US').input(e.target.value));
+                    setPhoneNumber(new AsYouType("US").input(e.target.value));
                   }}
                   value={phoneNumber}
                   maxLength={16}
@@ -106,33 +109,33 @@ export default function AuthForm({ actionUrl, buttonText }: AuthFormProps) {
               </div>
             </>
           )}
-          <div className='flex flex-col'>
-            <label className={formStyles.label} htmlFor='email'>
+          <div className="flex flex-col">
+            <label className={formStyles.label} htmlFor="email">
               Email:
             </label>
             <input
-              type='email'
-              name='email'
+              type="email"
+              name="email"
               required
               className={
                 actionData?.error ? formStyles.inputError : formStyles.input
               }
-              autoComplete='email'
+              autoComplete="email"
             />
           </div>
-          <div className='flex flex-col'>
-            <label className={formStyles.label} htmlFor='password'>
+          <div className="flex flex-col">
+            <label className={formStyles.label} htmlFor="password">
               Password
             </label>
             <input
-              type='password'
-              name='password'
+              type="password"
+              name="password"
               required
               className={
                 actionData?.error ? formStyles.inputError : formStyles.input
               }
               autoComplete={
-                isRegistration ? 'new-password' : 'current-password'
+                isRegistration ? "new-password" : "current-password"
               }
             />
           </div>
@@ -146,30 +149,22 @@ export default function AuthForm({ actionUrl, buttonText }: AuthFormProps) {
         )}
 
         <button
-          type='submit'
+          type="submit"
           className={formStyles.submitButton}
           disabled={isLoading}
         >
           {isLoading ? <Spinner /> : buttonText}
         </button>
 
-        <hr className='h-1 bg-orange drop-shadow shadow-dark rounded' />
-        <h3 className='text-sm text-center font-cherry'>
+        <hr className="h-1 rounded bg-purple shadow-dark drop-shadow" />
+        <p className="text-center font-cherry text-sm">
           {isRegistration
-            ? 'Already have an account?'
-            : "Don't have an account?"}
-          <br />
-          {isRegistration
-            ? 'Please login to use our breathing tool'
-            : 'Please sign up to use our breathing tool'}
-        </h3>
-        <button
-          className={formStyles.outlineButton}
-          type='button'
-          onClick={() => navigate(isRegistration ? '/signin' : '/signup')}
-        >
-          {isRegistration ? 'Sign In' : 'Sign Up'}
-        </button>
+            ? "Already have an account? "
+            : "Don't have an account? "}
+          <Link className={formStyles.link} to={isRegistration ? "/signin" : "/signup"}>
+            {isRegistration ? "Sign In" : "Sign Up"}
+          </Link>
+        </p>
       </Form>
     </div>
   );
