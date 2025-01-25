@@ -14,27 +14,10 @@ export async function action({ request }: Route.ActionArgs) {
   const phone = formData.get('phone') as string;
 
   if (!email || !password || !name || !phone) {
-    // todo: form validation
     return { error: 'All fields are required.' };
   }
 
   const supabaseServer = getSupabaseServer(request);
-  const {
-    data: { users },
-    error: userCheckError
-  } = await supabaseServer.auth.admin.listUsers();
-  if (userCheckError) {
-    console.error('Error checking user existence:', userCheckError.message);
-    return { error: 'Failed to connect to database. Please try again.' };
-  }
-
-  const userExists = users?.find((user: User) => user.email === email);
-  if (userExists) {
-    return {
-      // todo: provide link to /signin with this error
-      error: 'This email is already registered. Please sign in instead.'
-    };
-  }
 
   try {
     const phoneNumber = parsePhoneNumberWithError(phone, {
