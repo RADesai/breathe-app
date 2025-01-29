@@ -77,15 +77,20 @@ function formatTime(seconds: number) {
 const Links = () => {
   return (
     <div className="border-b-2 border-dark">
-      <div className="mb-6 max-w-screen-md text-center px-10 mx-auto">
+      <div className="mx-auto mb-6 w-full justify-items-center px-10 text-center md:w-2/3">
         <h2 className="mb-2 text-lg font-bold tracking-wide">
           Choose Your Breathwork Practice
         </h2>
-        <p className="text-sm">
+        <div className="rounded bg-white bg-opacity-50 p-2 text-sm sm:w-2/3">
           Each practice is designed to help with a specific goal, such as
-          relaxation, focus, or energy.<br/> Click on a box to begin your guided
-          breathing session.
-        </p>
+          relaxation, focus, or energy.
+          <br /> Click on a box to begin your guided breathing session.<br/>
+          <p className="text-xs mt-2">
+            *The dash-separated-numbers indicate the length of time for
+            each step of a complete breath,{" "}
+            <span className="font-bold">Inhale-Hold-Exhale-Hold</span>.
+          </p>
+        </div>
       </div>
       <div className="flex justify-center p-2">
         <div className="flex max-w-screen-md flex-wrap justify-center gap-4 text-center">

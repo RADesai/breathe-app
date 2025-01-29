@@ -9,10 +9,7 @@ export const getSupabaseServer = (request: Request) => {
   const cookieHeader = request.headers.get("Cookie") || "";
   const cookies = parse(cookieHeader);
   const accessToken = cookies["sb-access-token"];
-  const refreshToken = cookies["sb-refresh-token"]; // Ensure the refresh token is managed
-
-  console.log("getSupabaseServer refreshToken:", refreshToken);
-  console.log("^^ getSupabaseServer refreshToken ^^");
+  // const refreshToken = cookies["sb-refresh-token"]; // Ensure the refresh token is managed
 
   return createClient(supabaseUrl, supabaseSecretKey, {
     auth: {

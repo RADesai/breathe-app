@@ -63,7 +63,6 @@ export async function loader({ request }: { request: Request }) {
     return { session: null };
   }
 
-  console.log("<root> loader()... Server User found:", data.user);
   return { session: { user: data.user } };
 }
 

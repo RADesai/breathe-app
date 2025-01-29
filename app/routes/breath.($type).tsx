@@ -84,7 +84,6 @@ const BreathComp = () => {
   const container = useRef<HTMLDivElement>(null);
 
   const onComplete = useCallback(() => {
-    console.log("cycles complete");
     setAction(INHALE);
     setPlaying(false);
   }, [setAction]);
@@ -122,6 +121,9 @@ const BreathComp = () => {
   return (
     <div className="space-1 flex flex-wrap justify-center self-center overflow-scroll px-2 text-dark md:w-2/3">
       <div className="mb-4 w-full justify-items-center">
+        <h2 className="mb-2 text-lg font-bold tracking-wide">
+          Instructions
+        </h2>
         <p className="rounded bg-white bg-opacity-50 p-2 text-center text-sm sm:w-2/3">
           Follow the guided animation to regulate your breathing.
           <br />
@@ -177,9 +179,6 @@ const BreathComp = () => {
             className={animationStyles.controlButton}
             onClick={() => {
               if (isPlaying) {
-                console.log(
-                  "** isplaying already!, setPlaying(false) && toggleAnimation()",
-                );
                 setPlaying(false);
                 toggleAnimation();
               }

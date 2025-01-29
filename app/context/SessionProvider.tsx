@@ -61,11 +61,9 @@ export function SessionProvider({
 
   React.useEffect(() => {
     console.log("<SP> useEffect");
-    console.log("<SP> useEffect, session:", session);
 
     const initializeSession = async () => {
       if (serverSession) {
-        console.log("<SP> useEffect, serverSession:", serverSession);
         await supabase.auth.setSession({
           access_token: serverSession.access_token,
           refresh_token: serverSession.refresh_token!,
@@ -91,11 +89,6 @@ export function SessionProvider({
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, newSession) => {
       setTimeout(() => {
-        console.log(
-          `<SP> onAuthStateChange() event: "${event}", newSession:`,
-          newSession,
-        );
-
         if (event === "SIGNED_OUT" && session !== null) {
           setSession(null);
         } else if (newSession && newSession.user?.id !== session?.user?.id) {
