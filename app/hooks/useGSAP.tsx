@@ -64,6 +64,7 @@ const useGSAP = (props: GsapProps) => {
         smoothChildTiming: true,
         onStart: () => {
           console.log('TIMELINE:onStart');
+          setBreathCount(0);
         },
         onUpdate: () => {
           const time = timelineRef?.current?.time();
@@ -166,7 +167,6 @@ const useGSAP = (props: GsapProps) => {
         // console.log('gsap cleanup, no timeline to be found');
       }
     };
-    // ! todo: somethings breaking in these deps
   }, [
     durations,
     setAction,
@@ -187,6 +187,7 @@ const useGSAP = (props: GsapProps) => {
       setPlaying(false);
       setCompleted(false);
       setSeconds(0);
+      setBreathCount(0);
       setAction(INHALE);
     }
   };

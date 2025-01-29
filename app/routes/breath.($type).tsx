@@ -8,6 +8,7 @@ import {
 import AudioControl from "~/components/AudioControl";
 import { PleaseLogin } from "~/components/auth/PleaseLogin";
 import BreathTiles from "~/components/BreathTiles";
+import ProgressBar from "~/components/ProgressBar";
 import { useSession } from "~/context/SessionProvider";
 import useGSAP from "~/hooks/useGSAP";
 import { animationStyles } from "~/utils/styles";
@@ -69,14 +70,14 @@ interface OutletContext {
   action: Action;
   setBreathCount: React.Dispatch<React.SetStateAction<number>>;
   setAction: React.Dispatch<React.SetStateAction<Breath>>;
-  // breathCount: number
+  breathCount: number;
 }
 
 const BreathComp = () => {
   const { session } = useSession();
 
   const { durations } = useLoaderData();
-  const { action, setAction, setBreathCount } =
+  const { action, setAction, breathCount, setBreathCount } =
     useOutletContext<OutletContext>();
   const [isPlaying, setPlaying] = useState(false);
   const [completed, setCompleted] = useState(false);
@@ -89,16 +90,6 @@ const BreathComp = () => {
   }, [setAction]);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
-
-  // if (!userId) {
-  //   return (
-  //     <div className='flex flex-wrap self-center justify-center overflow-scroll gap-1 pt-4 px-2 md:w-2/3 text-dark'>
-  //       <div className='font-semibold text-center my-10 text-xl tracking-widest uppercase'>
-  //         You need to be logged in to view this page.
-  //       </div>
-  //     </div>
-  //   );
-  // }
 
   // todo: extract animation to comp?
   const { toggleAnimation, seconds, restartAnimation } = useGSAP({
@@ -120,10 +111,8 @@ const BreathComp = () => {
 
   return (
     <div className="space-1 flex flex-wrap justify-center self-center overflow-scroll px-2 text-dark md:w-2/3">
-      <div className="mb-4 w-full justify-items-center text-center">
-        <h2 className="mb-2 text-lg font-bold tracking-wide">
-          Instructions
-        </h2>
+      <div className="mb-3 w-full justify-items-center text-center">
+        <h2 className="mb-2 text-lg font-bold tracking-wide">Instructions</h2>
         <p className="rounded bg-white bg-opacity-50 p-2 text-center text-sm sm:w-2/3">
           Follow the guided animation to regulate your breathing.
           <br />
@@ -155,8 +144,8 @@ const BreathComp = () => {
             ))}
           </div>
           {completed && (
-            <div className="-z-10 h-full w-full bg-[#cbf3f0] p-3 pt-5 text-center font-semibold">
-              <div className="text-balance">
+            <div className="-z-10 h-full w-full bg-white bg-opacity-50 p-3 pt-5 text-center font-bold text-purple">
+              <div className="p-2">
                 You have completed a breath cycle!
                 <br />
                 <br />
@@ -249,6 +238,8 @@ const BreathComp = () => {
           </div>
         </div>
       </div>
+
+      <ProgressBar cycles={durations.cycles} breathCount={breathCount} />
     </div>
   );
 };
