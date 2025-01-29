@@ -21,11 +21,11 @@ const ProgressBar = ({
   );
 
   return (
-    <div className="flex h-4 w-full gap-1">
+    <div className="flex h-3 w-full gap-1 mb-3">
       {Array.from({ length: cycles }).map((_, index) => (
         <div
           key={index}
-          className={`h-full flex-1 rounded transition-all duration-300 ease-in-out ${getBackgroundStyle(
+          className={`h-full flex-1 rounded-sm transition-all duration-300 ease-in-out ${getBackgroundStyle(
             index,
           )}`}
         ></div>

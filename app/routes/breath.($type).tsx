@@ -111,7 +111,7 @@ const BreathComp = () => {
 
   return (
     <div className="space-1 flex flex-wrap justify-center self-center overflow-scroll px-2 text-dark md:w-2/3">
-      <div className="mb-3 w-full justify-items-center text-center">
+      <div className="mb-4 w-full justify-items-center text-center">
         <h2 className="mb-2 text-lg font-bold tracking-wide">Instructions</h2>
         <p className="rounded bg-white bg-opacity-50 p-2 text-center text-sm sm:w-2/3">
           Follow the guided animation to regulate your breathing.
@@ -123,15 +123,18 @@ const BreathComp = () => {
           rhythmic cycle to calm your mind and body.
         </p>
       </div>
+
+      <ProgressBar cycles={durations.cycles} breathCount={breathCount} />
+
       <div id="carousel" className="text-sm font-bold uppercase">
-        <div className="mb-5 text-center text-xl font-bold uppercase tracking-widest">
+        <div className="mb-3 text-center text-xl font-bold uppercase tracking-widest">
           Steps
         </div>
         <BreathTiles action={action} durations={durations} seconds={seconds} />
       </div>
 
       <div id="visuals">
-        <div className="mb-5 text-center text-xl font-bold uppercase tracking-widest">
+        <div className="mb-3 text-center text-xl font-bold uppercase tracking-widest">
           Breath
         </div>
         <div className="flex h-80 w-60 flex-col rounded border-4 border-dark bg-dark bg-opacity-5">
@@ -238,8 +241,6 @@ const BreathComp = () => {
           </div>
         </div>
       </div>
-
-      <ProgressBar cycles={durations.cycles} breathCount={breathCount} />
     </div>
   );
 };
