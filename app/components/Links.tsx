@@ -77,7 +77,7 @@ function formatTime(seconds: number) {
 const Links = () => {
   return (
     <div className="border-b-2 border-dark">
-      <div className="mx-auto mb-6 w-full justify-items-center px-10 text-center md:w-2/3">
+      <div className="mx-auto mb-6 w-full justify-items-center px-2 text-center md:w-2/3">
         <h2 className="mb-2 text-lg font-bold tracking-wide">
           Choose Your Breathwork Practice
         </h2>

@@ -47,7 +47,7 @@ export default function SignIn() {
       syncSession(actionData.session);
       navigate("/", { replace: true });
     } else if (session) {
-      console.error("Session Already Found, redirecting to /");
+      console.log("Session Found, redirecting to /");
       navigate("/", { replace: true });
     }
   }, [actionData, navigate, session, syncSession]);

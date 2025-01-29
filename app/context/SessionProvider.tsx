@@ -60,8 +60,6 @@ export function SessionProvider({
   }, [session]);
 
   React.useEffect(() => {
-    console.log("<SP> useEffect");
-
     const initializeSession = async () => {
       if (serverSession) {
         await supabase.auth.setSession({

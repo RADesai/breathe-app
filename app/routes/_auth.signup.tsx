@@ -75,7 +75,7 @@ export default function SignUp() {
 
   useEffect(() => {
     if (session) {
-      console.error("Session Already Found, redirecting to /");
+      console.log("Session Found, redirecting to /");
       navigate("/", { replace: true });
     }
   }, [navigate, session]);
