@@ -21,7 +21,7 @@ const ProgressBar = ({
   );
 
   return (
-    <div className="flex h-3 w-full gap-1 mb-3">
+    <div className="flex h-3 w-11/12 sm:w-4/5 md:w-2/3 gap-1 mb-3">
       {Array.from({ length: cycles }).map((_, index) => (
         <div
           key={index}

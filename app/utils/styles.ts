@@ -16,7 +16,7 @@ const error = `${statusBox} bg-red border-red`;
 const success = `${statusBox} bg-green border-green`;
 
 // ANIMATION
-const controlButton = `bg-pink text-white rounded p-2 my-4 tracking-widest flex justify-between items-center shadow hover:shadow-pink disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none`;
+const controlButton = `bg-pink text-white rounded p-2 mt-2 mb-4 tracking-widest flex justify-between items-center shadow hover:shadow-pink disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none`;
 
 // TYPOGRAPHY
 const header = `font-bold tracking-widest uppercase text-2xl text-purple`;

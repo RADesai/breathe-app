@@ -34,13 +34,10 @@ const UserFilledIcon = () => (
 );
 
 export default function Nav() {
-  // todo: navigate to '/signin' if no user || '/profile' with user
-  // todo: style user button for active/inactive user session
   const navigate = useNavigate();
-  // const { user } = useOutletContext<OutletContext>();
   const { session } = useSession();
   const location = useLocation();
-  const isProfile = location.pathname === "/profile"; // Detect profile route
+  const isProfile = location.pathname === "/profile";
 
   return (
     <nav className="grid grid-cols-5 items-center border-b-2 border-dark px-4 py-1 sm:px-10">

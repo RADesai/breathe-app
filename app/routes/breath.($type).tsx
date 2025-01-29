@@ -110,21 +110,19 @@ const BreathComp = () => {
   }
 
   return (
-    <div className="space-1 flex flex-wrap justify-center self-center overflow-scroll px-2 text-dark md:w-2/3">
-      <div className="mb-4 w-full justify-items-center text-center">
-        <h2 className="mb-2 text-lg font-bold tracking-wide">Instructions</h2>
+    <div className="sm:space-x-4 flex flex-wrap justify-center self-center overflow-scroll px-2 text-dark md:w-2/3">
+      <div className="mb-2 w-full justify-items-center text-center">
+        <h2 className="text-lg font-bold tracking-wide">Instructions</h2>
         <p className="rounded bg-white bg-opacity-50 p-2 text-center text-sm sm:w-2/3">
-          Follow the guided animation to regulate your breathing.
+          Follow the animation to regulate your breathing.
           <br />
           <span className="font-bold">Inhale</span>,{" "}
           <span className="font-bold">Hold (Retention)</span>,{" "}
           <span className="font-bold">Exhale</span>, and{" "}
-          <span className="font-bold">Hold (Suspension)</span> again in a
-          rhythmic cycle to calm your mind and body.
+          <span className="font-bold">Hold (Suspension)</span> in a rhythmic
+          cycle to calm your mind and body.
         </p>
       </div>
-
-      <ProgressBar cycles={durations.cycles} breathCount={breathCount} />
 
       <div id="carousel" className="text-sm font-bold uppercase">
         <div className="mb-3 text-center text-xl font-bold uppercase tracking-widest">
@@ -178,7 +176,7 @@ const BreathComp = () => {
           >
             <svg
               aria-hidden="true"
-              className="h-8 w-8"
+              className="size-8"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
@@ -204,7 +202,7 @@ const BreathComp = () => {
           >
             <svg
               aria-hidden="true"
-              className="h-8 w-8"
+              className="size-8"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
@@ -229,7 +227,7 @@ const BreathComp = () => {
                 viewBox="0 0 24 24"
                 strokeWidth="1.5"
                 stroke="currentColor"
-                className="h-8 w-8"
+                className="size-8"
               >
                 <path
                   strokeLinecap="round"
@@ -241,6 +239,7 @@ const BreathComp = () => {
           </div>
         </div>
       </div>
+      <ProgressBar cycles={durations.cycles} breathCount={breathCount} />
     </div>
   );
 };
@@ -250,9 +249,6 @@ export default BreathComp;
 export function ErrorBoundary() {
   const error = useRouteError();
   console.error(error);
-  // When NODE_ENV=production:
-  // error.message = "Unexpected Server Error"
-  // error.stack = undefined
   return (
     <div className="flex flex-wrap justify-around gap-1 overflow-scroll bg-red p-2 font-bold">
       Error loading animation, please try again...

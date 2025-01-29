@@ -11,7 +11,7 @@ export default function Bar({
 
   return (
     <div
-      className={`mb-3 flex items-center justify-center p-2 text-xl font-bold uppercase tracking-widest ${className}`}
+      className={`mb-2 flex items-center justify-center p-2 text-xl font-bold uppercase tracking-widest ${className}`}
     >
       {location.pathname !== "/" && (
         <Link

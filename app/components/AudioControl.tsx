@@ -26,8 +26,7 @@ const AudioControl = (props: AudioControlProps) => {
             viewBox='0 0 24 24'
             strokeWidth='1.5'
             stroke='currentColor'
-            className='w-8 h-8'
-            // todo: className='size-8'
+            className='size-8'
           >
             <path
               strokeLinecap='round'
@@ -42,7 +41,7 @@ const AudioControl = (props: AudioControlProps) => {
             viewBox='0 0 24 24'
             strokeWidth='1.5'
             stroke='currentColor'
-            className='w-8 h-8'
+            className='size-8'
           >
             <path
               strokeLinecap='round'
