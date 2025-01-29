@@ -120,7 +120,7 @@ const BreathComp = () => {
 
   return (
     <div className="space-1 flex flex-wrap justify-center self-center overflow-scroll px-2 text-dark md:w-2/3">
-      <div className="mb-4 w-full justify-items-center">
+      <div className="mb-4 w-full justify-items-center text-center">
         <h2 className="mb-2 text-lg font-bold tracking-wide">
           Instructions
         </h2>
