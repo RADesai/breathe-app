@@ -55,6 +55,7 @@ export function SessionProvider({
         document.cookie = "sb-refresh-token=; path=/; max-age=0;";
         setSession(null);
       });
+      // todo: navigate to /signin here?
     }
   }, [session]);
 

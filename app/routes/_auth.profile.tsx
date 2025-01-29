@@ -1,4 +1,5 @@
 import { Link, useActionData, useNavigate } from "react-router";
+import { PleaseLogin } from "~/components/auth/PleaseLogin";
 import Spinner from "~/components/Spinner";
 import { useSession } from "~/context/SessionProvider";
 import { formStyles } from "~/utils/styles";
@@ -9,28 +10,13 @@ export default function Profile() {
   const actionData = useActionData<{ error?: string }>();
 
   if (!session?.user) {
-    console.log("<Profile> !session?.user");
-
-    return (
-      <div className="flex flex-col items-center">
-        <p className="text-center font-cherry text-sm">
-          Please <Link
-            className={formStyles.link}
-            to="/signin"
-          >Login
-          </Link> to access your profile.
-        </p>
-      </div>
-    );
+    return <PleaseLogin message="to access your profile." />;
   }
 
   const handleLogout = async () => {
     try {
-      console.log("<Profile> handleLogout! POST(/logout)");
-      await fetch("/logout", { method: "POST" }); // Call server action
-      console.log("<Profile> handleLogout! clearSession()");
-      clearSession(); // Clear client session
-      console.log("<Profile> handleLogout! navigate(/signin)");
+      await fetch("/logout", { method: "POST" });
+      clearSession();
       navigate("/signin");
     } catch (error) {
       console.error("Logout failed:", error);
@@ -39,15 +25,24 @@ export default function Profile() {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="text-lg">
-        {session?.user.user_metadata.name || "Guest"}!
+      <div className="text-center text-lg">
+        Hello{" "}
+        <span className="font-bold">
+          {session?.user.user_metadata.name || "Guest"}!
+        </span>
       </div>
 
       {actionData?.error && (
         <div className={formStyles.error}>{actionData.error}</div>
       )}
 
-      <button onClick={handleLogout} className={formStyles.submitButton}>
+      <div className="mb-20 mt-4">
+        <p className={`${formStyles.error} my-2 text-sm tracking-widest`}>
+          This page is still under construction!
+        </p>
+      </div>
+
+      <button onClick={handleLogout} className={formStyles.outlineButton}>
         Logout
       </button>
     </div>

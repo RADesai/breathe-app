@@ -11,6 +11,7 @@ import {
   RETENTION,
   SUSPENSION
 } from '~/utils/types';
+import { formatTime } from '~/components/BreathTiles';
 
 export interface GsapProps {
   isPlaying: boolean;
@@ -66,7 +67,7 @@ const useGSAP = (props: GsapProps) => {
         },
         onUpdate: () => {
           const time = timelineRef?.current?.time();
-          setSeconds(Math.round(time));
+          setSeconds(formatTime(time));
         },
         onRepeat: () => {
           console.log('TIMELINE:onRepeat');

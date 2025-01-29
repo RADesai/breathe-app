@@ -6,8 +6,8 @@ import {
   EXHALE,
   INHALE,
   RETENTION,
-  SUSPENSION
-} from '~/utils/types';
+  SUSPENSION,
+} from "~/utils/types";
 
 export const isActiveStep = (action: Action, step: Breath) => {
   const actionSm = action.toLowerCase();
@@ -22,10 +22,14 @@ interface BreathsProps {
   seconds: number;
 }
 
+export const formatTime = (time: number) => {
+  return Math.round(time * 10) / 10;
+};
+
 const getRemainingTime = (
   durations: Duration,
   step: Breath,
-  seconds: number
+  seconds: number,
 ) => {
   switch (step) {
     case INHALE:
@@ -52,24 +56,22 @@ const getRemainingTime = (
 const BreathTiles = ({ action, durations, seconds }: BreathsProps) => {
   return (
     <div
-      id='carousel'
-      className='font-bold uppercase flex flex-col justify-between h-80 px-2'
+      id="carousel"
+      className="flex h-80 flex-col justify-between px-2 font-bold uppercase"
     >
       {breathSteps.map((step) => {
         const isActive = isActiveStep(action, step);
         return (
           <div
             key={step}
-            className={`rounded text-center p-2 ${
-              isActive
-                ? 'text-white bg-pink underline-offset-4'
-                : 'opacity-50'
+            className={`rounded p-2 text-center ${
+              isActive ? "bg-pink text-white underline-offset-4" : "opacity-50"
             }`}
           >
-            <div className='underline'>{step}</div>
-            <div className='text-sm'>
+            <div className="underline">{step === RETENTION || step === SUSPENSION ? 'hold' : step}</div>
+            <div className="text-sm">
               {isActive
-                ? Math.round(getRemainingTime(durations, step, seconds))
+                ? formatTime(getRemainingTime(durations, step, seconds)).toFixed(1)
                 : durations?.[step]}
             </div>
           </div>

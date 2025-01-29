@@ -34,8 +34,15 @@ export const links: LinksFunction = () => [
 
 export const meta: MetaFunction = () => {
   return [
-    { title: "Breathe App" },
-    { name: "Breathe", content: "Take a Breath" },
+    { title: "Breathwork App" },
+    { name: "Breathwork by Divine Studio", content: "Take a Breath" },
+    { charSet: "utf-8" },
+    { name: "viewport", content: "width=device-width, initial-scale=1" },
+    {
+      name: "description",
+      content:
+        "Breathwork - A tool to support mindful ways to take a pause, relax, and center yourself.",
+    },
   ];
 };
 
@@ -64,9 +71,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <head>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        {/* <meta httpEquiv="Content-Security-Policy" /> */}
         <Meta />
         <Links />
         <ScrollRestoration />

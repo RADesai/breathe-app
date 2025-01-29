@@ -4,8 +4,8 @@ const input = `py-2 px-3 border text-sm border-dark border-opacity-50 drop-shado
 const inputError = `${input} border-red bg-red bg-opacity-20`;
 
 // BUTTONS
-const submitButton = `border border-opacity-10 hover:border-opacity-100 py-2 px-3 w-full rounded-lg border-dark bg-purple justify-items-center text-white`;
-const outlineButton = `border border-opacity-75 hover:border-opacity-100 py-2 px-3 w-full rounded-lg border-purple justify-items-center`;
+const submitButton = `border border-opacity-10 hover:border-opacity-100 py-2 px-3 w-full rounded-lg border-dark bg-purple justify-items-center text-white hover:underline`;
+const outlineButton = `border border-opacity-40 hover:border-opacity-100 py-2 px-3 w-full rounded-lg border-purple justify-items-center hover:underline`;
 
 // LINKS
 const link = `text-purple hover:underline font-bold`;

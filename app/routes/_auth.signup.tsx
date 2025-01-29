@@ -9,6 +9,8 @@ import { useSession } from "~/context/SessionProvider";
 import { getSupabaseServer } from "~/db/supabaseServer";
 
 // todo: explain hold vs retention
+// todo: name string character limit
+// todo: Email not confirmed error -> link to resend email confirmation
 
 export async function action({ request }: Route.ActionArgs) {
   const formData = await request.formData();

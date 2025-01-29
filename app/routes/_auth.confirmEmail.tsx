@@ -8,7 +8,8 @@ import {
 import { getSupabaseServer } from "~/db/supabaseServer";
 import { formStyles } from "~/utils/styles";
 
-import logo from "../logo.png";
+import { useState } from "react";
+import logo from "../logo.webp";
 
 export async function action({ request }: Route.ActionArgs) {
   const formData = await request.formData();
@@ -19,17 +20,6 @@ export async function action({ request }: Route.ActionArgs) {
       status: 400,
     });
   }
-
-  /* email verify link redirects to:
-    - https://qcbudtibwgaddbdqthlm.supabase.co
-    - /auth
-    - /v1
-    - /verify?
-      - token=eea558108f3e06332f2649005de73511410ff51e281c74ab40bb9a7b&
-      - type=signup&
-      - redirect_to=http://localhost:3000
-      //  - onsuccess
-  */
 
   const supabaseServer = getSupabaseServer(request);
   const { error } = await supabaseServer.auth.resend({
@@ -58,6 +48,8 @@ export default function ConfirmEmail() {
   const navigation = useNavigation();
   const isLoading = navigation.state === "submitting";
 
+  const [resendEmail, setResendEmail] = useState(email || "");
+
   return (
     <div className="confirmation-page">
       <Form
@@ -77,6 +69,7 @@ export default function ConfirmEmail() {
           <p>
             Please follow the link in the email to complete your registration.
           </p>
+          <br />
           <p>
             <strong>Didn&apos;t get the email?</strong> Check your spam folder
             or resend the confirmation email.
@@ -93,7 +86,8 @@ export default function ConfirmEmail() {
             className={
               actionData?.error ? formStyles.inputError : formStyles.input
             }
-            value={email || ""}
+            value={resendEmail}
+            onChange={(e) => setResendEmail(e.target.value)}
             autoComplete="email"
           />
         </div>

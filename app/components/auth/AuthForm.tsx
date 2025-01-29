@@ -2,12 +2,11 @@ import {
   Form,
   Link,
   useActionData,
-  useNavigate,
-  useNavigation,
+  useNavigation
 } from "react-router";
 import { formStyles } from "~/utils/styles";
 
-import logo from "../../logo.png";
+import logo from "../../logo.webp";
 import Spinner from "../Spinner";
 
 import { AsYouType } from "libphonenumber-js";
@@ -20,7 +19,6 @@ type AuthFormProps = {
 
 export default function AuthForm({ actionUrl, buttonText }: AuthFormProps) {
   const actionData = useActionData<{ error?: string; success?: string }>();
-  const navigate = useNavigate();
   const navigation = useNavigation();
 
   const isRegistration = actionUrl === "/signup";
