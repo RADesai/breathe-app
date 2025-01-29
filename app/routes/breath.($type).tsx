@@ -1,16 +1,18 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useRef, useState } from "react";
 import {
   AppLoadContext,
   useLoaderData,
   useOutletContext,
-  useRouteError
-} from 'react-router';
-import AudioControl from '~/components/AudioControl';
-import BreathTiles from '~/components/BreathTiles';
-import useGSAP from '~/hooks/useGSAP';
-import { animationStyles } from '~/utils/styles';
+  useRouteError,
+} from "react-router";
+import AudioControl from "~/components/AudioControl";
+import { PleaseLogin } from "~/components/auth/PleaseLogin";
+import BreathTiles from "~/components/BreathTiles";
+import { useSession } from "~/context/SessionProvider";
+import useGSAP from "~/hooks/useGSAP";
+import { animationStyles } from "~/utils/styles";
 
-import { Action, Breath, INHALE } from '~/utils/types';
+import { Action, Breath, INHALE } from "~/utils/types";
 
 export async function loader(args: {
   params: { type: string };
@@ -41,7 +43,7 @@ export async function loader(args: {
           retention: parseInt(r) || 0,
           exhale: parseInt(e) || 0,
           suspension: parseInt(s) || 0,
-          cycles: parseInt(c) || 0
+          cycles: parseInt(c) || 0,
         };
         return Response.json({ durations });
       } else if (shortMatch) {
@@ -49,7 +51,7 @@ export async function loader(args: {
         durations = {
           inhale: parseInt(i),
           exhale: parseInt(e),
-          cycles: parseInt(c) || 0
+          cycles: parseInt(c) || 0,
         };
         return Response.json({ durations });
       } else {
@@ -71,7 +73,9 @@ interface OutletContext {
 }
 
 const BreathComp = () => {
-  const { durations, userId } = useLoaderData();
+  const { session } = useSession();
+
+  const { durations } = useLoaderData();
   const { action, setAction, setBreathCount } =
     useOutletContext<OutletContext>();
   const [isPlaying, setPlaying] = useState(false);
@@ -80,7 +84,6 @@ const BreathComp = () => {
   const container = useRef<HTMLDivElement>(null);
 
   const onComplete = useCallback(() => {
-    console.log('cycles complete');
     setAction(INHALE);
     setPlaying(false);
   }, [setAction]);
@@ -108,34 +111,52 @@ const BreathComp = () => {
     setCompleted,
     scope: container,
     durations,
-    audioRef
+    audioRef,
   });
 
+  if (!session?.user) {
+    return <PleaseLogin message="to use the Breathwork tool" />;
+  }
+
   return (
-    <div className='flex flex-wrap self-center justify-center overflow-scroll gap-1 pt-4 px-2 md:w-2/3 text-dark'>
-      <div id='carousel' className='text-sm font-bold uppercase'>
-        <div className='mb-5 font-bold text-center tracking-widest uppercase text-xl'>
+    <div className="space-1 flex flex-wrap justify-center self-center overflow-scroll px-2 text-dark md:w-2/3">
+      <div className="mb-4 w-full justify-items-center text-center">
+        <h2 className="mb-2 text-lg font-bold tracking-wide">
+          Instructions
+        </h2>
+        <p className="rounded bg-white bg-opacity-50 p-2 text-center text-sm sm:w-2/3">
+          Follow the guided animation to regulate your breathing.
+          <br />
+          <span className="font-bold">Inhale</span>,{" "}
+          <span className="font-bold">Hold (Retention)</span>,{" "}
+          <span className="font-bold">Exhale</span>, and{" "}
+          <span className="font-bold">Hold (Suspension)</span> again in a
+          rhythmic cycle to calm your mind and body.
+        </p>
+      </div>
+      <div id="carousel" className="text-sm font-bold uppercase">
+        <div className="mb-5 text-center text-xl font-bold uppercase tracking-widest">
           Steps
         </div>
         <BreathTiles action={action} durations={durations} seconds={seconds} />
       </div>
 
-      <div id='visuals'>
-        <div className='mb-5 font-bold text-center tracking-widest uppercase text-xl'>
+      <div id="visuals">
+        <div className="mb-5 text-center text-xl font-bold uppercase tracking-widest">
           Breath
         </div>
-        <div className='flex flex-col bg-dark bg-opacity-5 w-60 h-80 border-4 border-dark rounded'>
-          <div ref={container} className='flex justify-center'>
+        <div className="flex h-80 w-60 flex-col rounded border-4 border-dark bg-dark bg-opacity-5">
+          <div ref={container} className="flex justify-center">
             {Array.from({ length: 240 }, (_, index) => (
               <div
                 key={index}
-                className={`boxes w-[1px] first-of-type:rounded-bl last-of-type:rounded-br -z-10`}
+                className={`boxes -z-10 w-[1px] first-of-type:rounded-bl last-of-type:rounded-br`}
               />
             ))}
           </div>
           {completed && (
-            <div className='font-semibold bg-[#cbf3f0] -z-10 w-full h-full text-center pt-5 p-3'>
-              <div className='text-balance'>
+            <div className="-z-10 h-full w-full bg-[#cbf3f0] p-3 pt-5 text-center font-semibold">
+              <div className="text-balance">
                 You have completed a breath cycle!
                 <br />
                 <br />
@@ -151,34 +172,31 @@ const BreathComp = () => {
           )}
         </div>
         {/* TODO: extract btn controls to component */}
-        <div className='flex justify-center gap-4'>
+        <div className="flex justify-center gap-4">
           <AudioControl audioRef={audioRef} />
           <button
             disabled={!isPlaying}
             className={animationStyles.controlButton}
             onClick={() => {
               if (isPlaying) {
-                console.log(
-                  '** isplaying already!, setPlaying(false) && toggleAnimation()'
-                );
                 setPlaying(false);
                 toggleAnimation();
               }
             }}
           >
             <svg
-              aria-hidden='true'
-              className='w-8 h-8'
-              xmlns='http://www.w3.org/2000/svg'
-              fill='none'
-              viewBox='0 0 24 24'
-              strokeWidth='1.5'
-              stroke='currentColor'
+              aria-hidden="true"
+              className="h-8 w-8"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth="1.5"
+              stroke="currentColor"
             >
               <path
-                strokeLinecap='round'
-                strokeLinejoin='round'
-                d='M15.75 5.25v13.5m-7.5-13.5v13.5'
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M15.75 5.25v13.5m-7.5-13.5v13.5"
               />
             </svg>
           </button>
@@ -193,35 +211,38 @@ const BreathComp = () => {
             }}
           >
             <svg
-              aria-hidden='true'
-              className='w-8 h-8'
-              xmlns='http://www.w3.org/2000/svg'
-              fill='none'
-              viewBox='0 0 24 24'
-              strokeWidth='1.5'
-              stroke='currentColor'
+              aria-hidden="true"
+              className="h-8 w-8"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth="1.5"
+              stroke="currentColor"
             >
               <path
-                strokeLinecap='round'
-                strokeLinejoin='round'
-                d='M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z'
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z"
               />
             </svg>
           </button>
           <div>
-            <button className={animationStyles.controlButton} onClick={() => restartAnimation()}>
+            <button
+              className={animationStyles.controlButton}
+              onClick={() => restartAnimation()}
+            >
               <svg
-                xmlns='http://www.w3.org/2000/svg'
-                fill='none'
-                viewBox='0 0 24 24'
-                strokeWidth='1.5'
-                stroke='currentColor'
-                className='w-8 h-8'
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth="1.5"
+                stroke="currentColor"
+                className="h-8 w-8"
               >
                 <path
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  d='M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99'
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"
                 />
               </svg>
             </button>
@@ -241,7 +262,7 @@ export function ErrorBoundary() {
   // error.message = "Unexpected Server Error"
   // error.stack = undefined
   return (
-    <div className='flex flex-wrap justify-around overflow-scroll gap-1 font-bold bg-red p-2'>
+    <div className="flex flex-wrap justify-around gap-1 overflow-scroll bg-red p-2 font-bold">
       Error loading animation, please try again...
     </div>
   );

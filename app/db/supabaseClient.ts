@@ -1,4 +1,4 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient } from "@supabase/supabase-js";
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL!;
 const supabasePublicKey = import.meta.env.VITE_SUPABASE_PUBLIC_KEY!;
@@ -8,10 +8,5 @@ export const supabase = createClient(supabaseUrl, supabasePublicKey, {
     persistSession: true,
     autoRefreshToken: true,
     detectSessionInUrl: true,
-  },
-  global: {
-    headers: {
-      "X-Use-Cookies": "true",
-    },
   },
 });

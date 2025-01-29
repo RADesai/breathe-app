@@ -11,7 +11,7 @@ export default function Index() {
   const [breathCount, setBreathCount] = useState(0);
 
   return (
-    <div className='flex justify-center flex-col'>
+    <div className="flex flex-col justify-center">
       <Nav />
       <Bar title="Breath" className="bg-pink text-white" />
       <Outlet
@@ -19,7 +19,7 @@ export default function Index() {
           action,
           setAction,
           breathCount,
-          setBreathCount
+          setBreathCount,
         }}
       />
       {/* <Controls

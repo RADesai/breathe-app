@@ -1,66 +1,50 @@
-import { useEffect } from 'react';
-import {
-  Form,
-  useActionData,
-  useNavigate
-} from 'react-router';
-import Spinner from '~/components/Spinner';
-import { useSession } from '~/context/SessionProvider';
-import { formStyles } from '~/utils/styles';
+import { Link, useActionData, useNavigate } from "react-router";
+import { PleaseLogin } from "~/components/auth/PleaseLogin";
+import Spinner from "~/components/Spinner";
+import { useSession } from "~/context/SessionProvider";
+import { formStyles } from "~/utils/styles";
 
 export default function Profile() {
-  // const { user } = useOutletContext<OutletContext>();
-  const session = useSession();
+  const { session, clearSession } = useSession();
   const navigate = useNavigate();
-
   const actionData = useActionData<{ error?: string }>();
 
-  // Redirect to /signin if no user session exists
-  useEffect(() => {
-    console.log('<Profile.useEffect>');
-    if (session?.user === undefined) {
-      console.log('<Profile.useEffect> "session?.user = undefined"');
-      // Skip redirect logic until the session?.user object is fully resolved
-      return;
-    }
-
-    if (!session?.user) {
-      console.log('<Profile.useEffect> !session?.user -> navigate("/signin")');
-      navigate('/signin');
-    }
-  }, [session?.user, navigate]);
-
-  // Avoid rendering while user is undefined
-  if (session?.user === undefined) {
-    console.log('<Profile> "user = undefined"');
-    // Optionally show a loading spinner while resolving user state
-    return (
-      <div className='flex flex-col items-center'>
-        <Spinner />
-        <div>Loading...</div>
-      </div>
-    );
-  }
-
   if (!session?.user) {
-    console.log('<Profile> !session?.user');
-    return null; // Prevent rendering if no session?.user exists
+    return <PleaseLogin message="to access your profile." />;
   }
+
+  const handleLogout = async () => {
+    try {
+      await fetch("/logout", { method: "POST" });
+      clearSession();
+      navigate("/signin");
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
 
   return (
-    <div className='flex flex-col gap-4'>
-      <h1 className='text-2xl font-bold'>Profile</h1>
-      <div className='text-lg'>Welcome, {session?.user.email || 'Guest'}!</div>
+    <div className="flex flex-col gap-4">
+      <div className="text-center text-lg">
+        Hello{" "}
+        <span className="font-bold">
+          {session?.user.user_metadata.name || "Guest"}!
+        </span>
+      </div>
 
       {actionData?.error && (
-        <div className='text-red mt-2'>{actionData.error}</div>
+        <div className={formStyles.error}>{actionData.error}</div>
       )}
 
-      <Form method='post' action='/logout'>
-        <button type='submit' className={formStyles.submitButton}>
-          Logout
-        </button>
-      </Form>
+      <div className="mb-20 mt-4">
+        <p className={`${formStyles.error} my-2 text-sm tracking-widest`}>
+          This page is still under construction!
+        </p>
+      </div>
+
+      <button onClick={handleLogout} className={formStyles.outlineButton}>
+        Logout
+      </button>
     </div>
   );
 }
