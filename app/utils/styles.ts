@@ -1,22 +1,23 @@
 // FORM
 const label = `font-cherry`;
-const input = `py-2 px-3 border text-md border-dark border-opacity-50 drop-shadow rounded-lg`;
-const inputError = `${input} border-red bg-red bg-opacity-20`;
+const input = `py-2 px-3 border text-md border-dark border-opacity-50 drop-shadow-sm rounded-lg`;
+const inputError = `${input} border-red bg-red/20`;
 
 // BUTTONS
-const submitButton = `border border-opacity-10 hover:border-opacity-100 py-2 px-3 w-full rounded-lg border-dark bg-purple justify-items-center text-center text-white hover:underline`;
-const outlineButton = `border border-opacity-40 hover:border-opacity-100 py-2 px-3 w-full rounded-lg border-purple justify-items-center text-center hover:underline`;
+const button = `border hover:border-opacity-100 py-2 px-3 w-full rounded-lg justify-items-center text-center hover:underline cursor-pointer`;
+const submitButton = `${button} border-opacity-10 border-dark bg-purple text-white`;
+const outlineButton = `${button} border-opacity-40 border-purple`;
 
 // LINKS
 const link = `text-purple hover:underline font-bold`;
 
 // STATUS
-const statusBox = `border-2 w-full bg-dark bg-opacity-80 p-2 border-dark text-dark text-sm font-bold rounded`;
+const statusBox = `border-2 w-full bg-dark/80 p-2 border-dark text-dark text-sm font-bold rounded-sm`;
 const error = `${statusBox} bg-red border-red`;
 const success = `${statusBox} bg-green border-green`;
 
 // ANIMATION
-const controlButton = `bg-pink text-white rounded p-2 mt-2 mb-4 tracking-widest flex justify-between items-center shadow hover:shadow-pink disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none`;
+const controlButton = `bg-pink text-white rounded-sm p-2 mt-2 mb-4 tracking-widest flex justify-between items-center shadow-sm hover:shadow-pink disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none cursor-pointer`;
 
 // TYPOGRAPHY
 const header = `font-bold tracking-widest uppercase text-2xl text-purple`;

@@ -154,7 +154,7 @@ export default function AuthForm({ actionUrl, buttonText }: AuthFormProps) {
           {isLoading ? <Spinner /> : buttonText}
         </button>
 
-        <hr className="h-1 rounded bg-purple shadow-dark drop-shadow" />
+        <hr className="h-1 rounded-sm bg-purple shadow-dark drop-shadow-sm" />
         <p className="text-center font-cherry text-sm">
           {isRegistration
             ? "Already have an account? "

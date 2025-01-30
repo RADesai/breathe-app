@@ -1,7 +1,7 @@
 import { Link } from "react-router";
 
 const linkClass =
-  "bg-white p-1 rounded h-40 sm:h-44 w-40 sm:w-44 flex flex-col justify-between text-sm font-bold justify-around px-2 shadow-orange group";
+  "bg-white p-1 rounded-sm h-40 sm:h-44 w-40 sm:w-44 flex flex-col justify-between text-sm font-bold justify-around px-2 shadow-orange group";
 
 interface Formula {
   name: string;
@@ -81,7 +81,7 @@ const Links = () => {
         <h2 className="text-lg font-bold tracking-wide">
           Choose Your Breathwork Practice
         </h2>
-        <div className="rounded bg-white bg-opacity-50 p-2 text-sm sm:w-2/3">
+        <div className="rounded-sm bg-white/50 p-2 text-sm sm:w-2/3">
           Each practice is designed to help with a specific goal, such as
           relaxation, focus, or energy.
           <br /> Click on a box to begin your guided breathing session.<br/>
@@ -93,7 +93,7 @@ const Links = () => {
         </div>
       </div>
       <div className="flex justify-center p-2">
-        <div className="flex max-w-screen-md flex-wrap justify-center gap-4 text-center">
+        <div className="flex max-w-(--breakpoint-md) flex-wrap justify-center gap-4 text-center">
           {mockFormulas.map((formula) => (
             <Link
               key={formula.link}

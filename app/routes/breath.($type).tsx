@@ -113,7 +113,7 @@ const BreathComp = () => {
     <div className="sm:space-x-4 flex flex-wrap justify-center self-center overflow-scroll px-2 text-dark md:w-2/3">
       <div className="mb-2 w-full justify-items-center text-center">
         <h2 className="text-lg font-bold tracking-wide">Instructions</h2>
-        <p className="rounded bg-white bg-opacity-50 p-2 text-center text-sm sm:w-2/3">
+        <p className="rounded-sm bg-white/50 p-2 text-center text-sm sm:w-2/3">
           Follow the animation to regulate your breathing.
           <br />
           <span className="font-bold">Inhale</span>,{" "}
@@ -135,7 +135,7 @@ const BreathComp = () => {
         <div className="mb-3 text-center text-xl font-bold uppercase tracking-widest">
           Breath
         </div>
-        <div className="flex h-80 w-60 flex-col rounded border-4 border-dark bg-dark bg-opacity-5">
+        <div className="flex h-80 w-60 flex-col rounded-sm border-4 border-dark bg-white/5">
           <div ref={container} className="flex justify-center">
             {Array.from({ length: 240 }, (_, index) => (
               <div
@@ -145,7 +145,7 @@ const BreathComp = () => {
             ))}
           </div>
           {completed && (
-            <div className="-z-10 h-full w-full bg-white bg-opacity-50 p-3 pt-5 text-center font-bold text-purple">
+            <div className="-z-10 h-full w-full bg-white/50 p-3 pt-5 text-center font-bold text-purple">
               <div className="p-2">
                 You have completed a breath cycle!
                 <br />

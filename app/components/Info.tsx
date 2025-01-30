@@ -1,7 +1,7 @@
 const Info = () => {
   return (
     <div className='p-4 bg-white'>
-      <div className='max-w-screen-md flex justify-self-center'>
+      <div className='max-w-(--breakpoint-md) flex justify-self-center'>
         Guided Diaphragmatic Breathing
         <br />
         <br />

@@ -162,12 +162,12 @@ const Controls = (props: ControlsProps) => {
   };
 
   return (
-    <div className='controls bg-dark bg-opacity-5 flex flex-col md:w-2/3 self-center justify-center mb-10'>
+    <div className='controls bg-dark/5 flex flex-col md:w-2/3 self-center justify-center mb-10'>
       <div className='py-2 font-bold self-center tracking-widest uppercase text-xl'>
         Controls
       </div>
 
-      <div className='flex rounded'>
+      <div className='flex rounded-sm'>
         <div className='flex flex-col gap-4 self-center px-4 min-w-60'>
           {breaths.map((breath) => (
             <div key={breath} className='flex flex-col'>
@@ -203,7 +203,7 @@ const Controls = (props: ControlsProps) => {
           </div>
           <button
             disabled={!!somethingsWrong}
-            className='rounded p-2 w-full tracking-widest flex items-center justify-center bg-orange mb-5 shadow hover:shadow-orange disabled:opacity-50 disabled:shadow-none'
+            className='rounded-sm p-2 w-full tracking-widest flex items-center justify-center bg-orange mb-5 shadow-sm hover:shadow-orange disabled:opacity-50 disabled:shadow-none'
             onClick={() => {
               const path = breathObjectToString(settings);
               // todo: use redirect() from form action instead of navigate() - https://remix.run/docs/en/main/utils/redirect
