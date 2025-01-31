@@ -89,73 +89,73 @@ const useGSAP = (props: GsapProps) => {
 
     timelineRef.current
       .fromTo(
-        '.boxes',
+        ".boxes",
         {
           opacity: 0,
-          height: 0
+          height: 0,
         },
         {
           opacity: 1,
           height: 315,
-          backgroundColor: '#E56399',
+          backgroundColor: "#E56399", // todo: use css var: "var(--color-blue-500)"
           duration: durations[INHALE] - 1.2,
           stagger: {
             each: 0.005,
-            from: 'center',
-            axis: 'x'
+            from: "center",
+            axis: "x",
           },
           onStart: () => {
-            console.log('INHALE');
+            console.log("INHALE");
             setAction(INHALE);
             handleAudioSwitch();
-          }
+          },
         },
-        0
+        0,
       )
       .to(
-        '.boxes',
+        ".boxes",
         {
           opacity: 0.5,
           duration: durations[RETENTION],
           onStart: () => {
-            console.log('RETENTION');
+            console.log("RETENTION");
             setAction(RETENTION);
             handleAudioSwitch();
-          }
+          },
         },
-        durations[INHALE]
+        durations[INHALE],
       )
       .to(
-        '.boxes',
+        ".boxes",
         {
           opacity: 1,
           height: 0,
           duration: durations[EXHALE] - 1.2,
           stagger: {
             each: 0.005,
-            from: 'center',
-            axis: 'x'
+            from: "center",
+            axis: "x",
           },
           onStart: () => {
-            console.log('EXHALE');
+            console.log("EXHALE");
             setAction(EXHALE);
             handleAudioSwitch();
-          }
+          },
         },
-        durations[INHALE] + durations[RETENTION]
+        durations[INHALE] + durations[RETENTION],
       )
       .to(
-        '.boxes',
+        ".boxes",
         {
           duration: durations[SUSPENSION],
           opacity: 0,
           onStart: () => {
-            console.log('SUSPENSION');
+            console.log("SUSPENSION");
             setAction(SUSPENSION);
             handleAudioSwitch();
-          }
+          },
         },
-        durations[INHALE] + durations[RETENTION] + durations[EXHALE]
+        durations[INHALE] + durations[RETENTION] + durations[EXHALE],
       );
 
     return () => {

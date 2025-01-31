@@ -1,13 +1,14 @@
-import { Link, useActionData, useNavigate } from "react-router";
+import { useActionData, useNavigate } from "react-router";
 import { PleaseLogin } from "~/components/auth/PleaseLogin";
-import Spinner from "~/components/Spinner";
 import { useSession } from "~/context/SessionProvider";
 import { formStyles } from "~/utils/styles";
 
 export default function Profile() {
   const { session, clearSession } = useSession();
   const navigate = useNavigate();
-  const actionData = useActionData<{ error?: string }>();
+  const actionData = useActionData<{
+    error?: { message?: string; code?: string };
+  }>();
 
   if (!session?.user) {
     return <PleaseLogin message="to access your profile." />;
@@ -33,7 +34,7 @@ export default function Profile() {
       </div>
 
       {actionData?.error && (
-        <div className={formStyles.error}>{actionData.error}</div>
+        <div className={formStyles.error}>{actionData.error.message}</div>
       )}
 
       <div className="mb-20 mt-4">

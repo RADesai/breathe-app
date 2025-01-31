@@ -20,7 +20,7 @@ export async function action({ request }: Route.ActionArgs) {
   });
 
   if (error) {
-    return { error: error.message };
+    return { error: { code: error.code, message: error.message } };
   }
 
   console.log("Sign-in action complete:", data);
@@ -37,13 +37,16 @@ export async function action({ request }: Route.ActionArgs) {
 export default function SignIn() {
   const { session, syncSession } = useSession();
   const navigate = useNavigate();
-  const actionData = useActionData<{ session?: Session }>();
+  const actionData = useActionData<{
+    session?: Session;
+    error?: { message?: string; code?: string };
+  }>();
 
   useEffect(() => {
     if (
       actionData?.session &&
       actionData?.session.user?.id !== session?.user?.id
-    ) { // use actionData to sync session if it exists
+    ) {
       syncSession(actionData.session);
       navigate("/", { replace: true });
     } else if (session) {

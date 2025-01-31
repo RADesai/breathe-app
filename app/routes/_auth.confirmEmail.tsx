@@ -15,6 +15,8 @@ export async function action({ request }: Route.ActionArgs) {
   const formData = await request.formData();
   const email = formData.get("email") as string;
 
+  console.log('confirmemail action formData:', formData);
+
   if (!email) {
     return new Response(JSON.stringify({ error: "No email provided." }), {
       status: 400,
@@ -22,13 +24,15 @@ export async function action({ request }: Route.ActionArgs) {
   }
 
   const supabaseServer = getSupabaseServer(request);
-  const { error } = await supabaseServer.auth.resend({
+  const { data, error } = await supabaseServer.auth.resend({
     email,
     type: "signup",
     options: {
-      emailRedirectTo: `${import.meta.env.VITE_APP_URL}/emailVerify`,
+      emailRedirectTo: `${import.meta.env.VITE_APP_URL}/signin`,
     },
   });
+
+  console.log('confirmemail action data, error:', data, error);
 
   if (error) {
     return new Response(JSON.stringify({ error: error.message }), {
@@ -43,7 +47,11 @@ export default function ConfirmEmail() {
   const [searchParams] = useSearchParams();
   const email = searchParams.get("email");
 
-  const actionData = useActionData<{ error?: string }>();
+  const actionData = useActionData<{
+    error?: { message?: string; code?: string };
+  }>();
+
+  console.log('<confirmemail> actionData:', actionData);
 
   const navigation = useNavigation();
   const isLoading = navigation.state === "submitting";
@@ -55,7 +63,7 @@ export default function ConfirmEmail() {
       <Form
         method="post"
         action="/confirmemail"
-        className="flex flex-col gap-6 rounded-lg border border-dark border-opacity-50 bg-white px-10 py-8 drop-shadow-lg"
+        className="border-dark border-opacity-50 flex flex-col gap-6 rounded-lg border bg-white px-10 py-8 drop-shadow-lg"
       >
         <img
           src={logo}
@@ -64,7 +72,7 @@ export default function ConfirmEmail() {
         />
 
         <h1>Check Your Email For a Verification Link</h1>
-        <p className="text-sm">
+        <div className="text-sm">
           <p>A confirmation email has been sent to your inbox.</p>
           <p>
             Please follow the link in the email to complete your registration.
@@ -74,7 +82,7 @@ export default function ConfirmEmail() {
             <strong>Didn&apos;t get the email?</strong> Check your spam folder
             or resend the confirmation email.
           </p>
-        </p>
+        </div>
         <div className="flex flex-col">
           <label className={formStyles.label} htmlFor="email">
             Email:

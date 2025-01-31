@@ -86,6 +86,7 @@ export function SessionProvider({
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, newSession) => {
+      console.log(`<SP> onAuthStateChange(${event}):`);
       setTimeout(() => {
         if (event === "SIGNED_OUT" && session !== null) {
           setSession(null);

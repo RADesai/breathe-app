@@ -1,9 +1,4 @@
-import {
-  Form,
-  Link,
-  useActionData,
-  useNavigation
-} from "react-router";
+import { Form, Link, useActionData, useNavigation } from "react-router";
 import { formStyles } from "~/utils/styles";
 
 import logo from "../../logo.webp";
@@ -17,8 +12,63 @@ type AuthFormProps = {
   buttonText: string;
 };
 
+const AuthLink = ({ isRegistration }: { isRegistration?: boolean }) => (
+  <div className="font-cherry text-sm">
+    {isRegistration ? "Already have an account? " : "Don't have an account? "}
+    <Link
+      className={formStyles.link}
+      to={isRegistration ? "/signin" : "/signup"}
+    >
+      {isRegistration ? "Sign In" : "Sign Up"}
+    </Link>
+  </div>
+);
+
+const InvalidCredentials = () => {
+  return (
+    <div className={formStyles.error}>
+      Invalid email or password. Please try again.
+    </div>
+  );
+};
+
+const FormError = ({ error }: { error: { message?: string; code?: string } }) => {
+  if (!error) return null;
+
+  if (error.code === "invalid_credentials") {
+    return <InvalidCredentials />;
+  }
+
+  if (error.code === "email_not_confirmed") {
+    return (
+      <div className={formStyles.error}>
+        Email has not been verified. Please check your email for a confirmation link.
+        <div className="bg-white mt-2 p-2 rounded-sm">
+          <Link className={formStyles.link} to="/confirmemail">
+            Resend the email verification link
+          </Link>{" "}
+          if you have not received a link or need a new one.
+        </div>
+      </div>
+    );
+  }
+
+  if (error.code === "email_exists") {
+    return (
+      <div className={formStyles.error}>
+        Email already exists. Please sign in or use a different email.
+      </div>
+    );
+  }
+
+  return <div className={formStyles.error}>{error.message}</div>;
+};
+
 export default function AuthForm({ actionUrl, buttonText }: AuthFormProps) {
-  const actionData = useActionData<{ error?: string; success?: string }>();
+  const actionData = useActionData<{
+    error?: { message?: string; code?: string };
+    success?: string;
+  }>();
   const navigation = useNavigation();
 
   const isRegistration = actionUrl === "/signup";
@@ -32,7 +82,7 @@ export default function AuthForm({ actionUrl, buttonText }: AuthFormProps) {
       <Form
         method="post"
         action={actionUrl}
-        className="flex flex-col gap-6 rounded-lg border border-dark border-opacity-50 bg-white px-10 py-8 drop-shadow-lg"
+        className="border-dark border-opacity-50 caret-purple flex flex-col gap-6 rounded-lg border bg-white px-10 py-8 drop-shadow-lg"
       >
         <img
           src={logo}
@@ -45,7 +95,7 @@ export default function AuthForm({ actionUrl, buttonText }: AuthFormProps) {
             <h1 className="text-center text-xl font-bold">
               Register for Access
             </h1>
-            <h3 className="text-center font-cherry text-sm">
+            <h3 className="font-cherry text-center text-sm">
               Please register to use our breathing tool
             </h3>
           </div>
@@ -54,7 +104,7 @@ export default function AuthForm({ actionUrl, buttonText }: AuthFormProps) {
             <h1 className="text-center text-xl font-bold">
               Sign in to Breathwork
             </h1>
-            <h3 className="text-center font-cherry text-sm">
+            <h3 className="font-cherry text-center text-sm">
               Please sign in to use our breathing tool
             </h3>
           </div>
@@ -140,7 +190,7 @@ export default function AuthForm({ actionUrl, buttonText }: AuthFormProps) {
         </div>
 
         {actionData?.error && (
-          <div className={formStyles.error}>{actionData.error}</div>
+          <FormError error={actionData.error} />
         )}
         {actionData?.success && (
           <div className={`${formStyles.success}`}>Success!</div>
@@ -154,15 +204,8 @@ export default function AuthForm({ actionUrl, buttonText }: AuthFormProps) {
           {isLoading ? <Spinner /> : buttonText}
         </button>
 
-        <hr className="h-1 rounded-sm bg-purple shadow-dark drop-shadow-sm" />
-        <p className="text-center font-cherry text-sm">
-          {isRegistration
-            ? "Already have an account? "
-            : "Don't have an account? "}
-          <Link className={formStyles.link} to={isRegistration ? "/signin" : "/signup"}>
-            {isRegistration ? "Sign In" : "Sign Up"}
-          </Link>
-        </p>
+        <hr className="bg-purple shadow-dark h-1 rounded-sm drop-shadow-sm" />
+        <AuthLink isRegistration={isRegistration} />
       </Form>
     </div>
   );
